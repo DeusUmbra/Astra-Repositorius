@@ -65,7 +65,7 @@
                 var obstacles = map.createStaticLayer('Blocked', tiles, 0, 0);
                 obstacles.setCollisionByExclusion([-1]);
 
-                this.player = this.physics.add.sprite(100, 100, 'player', 97); //Player sprite
+                this.player = this.physics.add.sprite(550, 550, 'player', 97); //Player sprite
 
                 this.physics.world.bounds.width = map.widthInPixels; //Map borders
                 this.physics.world.bounds.height = map.heightInPixels;
@@ -77,80 +77,147 @@
                 this.cameras.main.startFollow(this.player);
                 this.cameras.main.roundPixels = true;
 
-                //  animation with key 'left'
-                this.anims.create({
+                //Animations for player
+                this.anims.create({ //Animation left
                     key: 'left',
                     frames: this.anims.generateFrameNumbers('player', { frames: [105, 104, 105, 106]}),
                     frameRate: 10,
                     repeat: -1
-                }); // animation with key 'right'
-                this.anims.create({
+                });
+                this.anims.create({ //Animation right
                     key: 'right',
                     frames: this.anims.generateFrameNumbers('player', { frames: [105, 104, 105, 106] }),
                     frameRate: 10,
                     repeat: -1
-                }); //Animation up
-                this.anims.create({
+                }); 
+                this.anims.create({ //Animation up
                     key: 'up',
                     frames: this.anims.generateFrameNumbers('player', { frames: [101, 100, 102, 100]}),
                     frameRate: 10,
                     repeat: -1
-                }); //Animation down
-                this.anims.create({
+                });
+                this.anims.create({ //Animation down
                     key: 'down',
                     frames: this.anims.generateFrameNumbers('player', { frames: [ 97, 96, 97, 98 ] }),
                     frameRate: 10,
                     repeat: -1
                 });
                 this.physics.add.collider(this.player, obstacles); //Collision
+
+                this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone }); //invisible enemy generation
+                for(var i = 1; i <= 6; i++) {
+                    var x = i * 100;
+                    for(var j = 1; j <=6; j++){
+                        var y = 100 * j;
+                        this.spawns.create(x, y, 20, 20);
+                    }         
+                }        
+                this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this); //If player touches enemy
             },
             update: function move (time, delta) //Allow movement
-                {
-                    this.player.body.setVelocity(0);
-                
-                    // Horizontal movement
-                    if (this.cursors.left.isDown)
-                    {
-                        this.player.body.setVelocityX(-80);
-                        this.player.flipX =true;
-                    }
-                    else if (this.cursors.right.isDown)
-                    {
-                        this.player.body.setVelocityX(80);
-                        this.player.flipX = false;
-                    }
+            {
+                this.player.body.setVelocity(0);
             
-                    // Vertical movement
-                    if (this.cursors.up.isDown)
-                    {
-                        this.player.body.setVelocityY(-80);
-                    }
-                    else if (this.cursors.down.isDown)
-                    {
-                        this.player.body.setVelocityY(80);
-                    }   
-
-                    if (this.cursors.left.isDown)
-                    {
-                        this.player.anims.play('left', true);
-                    }
-                    else if (this.cursors.right.isDown)
-                    {
-                        this.player.anims.play('right', true);
-                    }
-                    else if (this.cursors.up.isDown)
-                    {
-                        this.player.anims.play('up', true);
-                    }
-                    else if (this.cursors.down.isDown)
-                    {
-                        this.player.anims.play('down', true);
-                    }
-                    else
-                    {
-                        this.player.anims.stop();
-                    } 
+                // Horizontal movement
+                if (this.cursors.left.isDown)
+                {
+                    this.player.body.setVelocityX(-80);
+                    this.player.flipX =true;
+                    this.player.anims.play('left', true);
                 }
+                else if (this.cursors.right.isDown)
+                {
+                    this.player.body.setVelocityX(80);
+                    this.player.flipX = false;
+                    this.player.anims.play('right', true);
+                }
+        
+                // Vertical movement
+                if (this.cursors.up.isDown)
+                {
+                    this.player.body.setVelocityY(-80); //Not changing flipX cause it doesn't really matter with vertical movement.
+                    this.player.anims.play('up', true);
+                }
+                else if (this.cursors.down.isDown)
+                {
+                    this.player.body.setVelocityY(80);
+                    this.player.anims.play('down', true);
+                }   
+                else //No movement, no animation
+                {
+                    this.player.anims.stop();
+                } 
+            },
+            
+            onMeetEnemy: function(player, zone) {
+                //Destroy enemy
+                zone.destroy();
+                // shake the world
+                this.cameras.main.shake(300);
+                var timeEvent = this.time.addEvent({delay: 300, callback: this.battleStart, callbackScope: this}); //Start battle
+            },
+
+            battleStart: function() {
+                this.scene.switch('BattleScene');
+            }
+        });
+
+        var BattleScene = new Phaser.Class({
+ 
+            Extends: Phaser.Scene,
+
+            initialize:
+
+            function BattleScene ()
+            {
+                Phaser.Scene.call(this, { key: 'BattleScene' });
+            },
+            create: function ()
+            {
+                // Run UI Scene at the same time
+                this.scene.launch('UIScene');
+
+                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
+
+                var timeEvent = this.time.addEvent({delay: 2000, callback: this.exitBattle, callbackScope: this});
+
+                this.sys.events.on('wake', this.wake, this);
+            },
+
+            exitBattle: function() {
+                this.scene.sleep('UIScene');
+                this.scene.switch('WorldScene');
+            },
+
+            wake: function() {
+                this.scene.run('UIScene');  
+                this.time.addEvent({delay: 2000, callback: this.exitBattle, callbackScope: this});        
+            },
+        });
+
+        var UIScene = new Phaser.Class({
+
+            Extends: Phaser.Scene,
+
+            initialize:
+
+            function UIScene ()
+            {
+                Phaser.Scene.call(this, { key: 'UIScene' });
+            },
+
+            create: function ()
+            {    
+                this.graphics = this.add.graphics();
+                this.graphics.lineStyle(1, 0xffffff);
+                this.graphics.fillStyle(0x031f4c, 1);        
+                this.graphics.strokeRect(2, 330, 210, 300);
+                this.graphics.fillRect(2, 330, 210, 300);
+                this.graphics.strokeRect(214, 330, 210, 300);
+                this.graphics.fillRect(214, 330, 210, 300);
+                this.graphics.strokeRect(426, 330, 210, 300);
+                this.graphics.fillRect(426, 330, 210, 300);
+            }
         });
 
         var config = {
@@ -168,10 +235,14 @@
         },
         scene: [
             BootScene,
-            WorldScene
+            WorldScene,
+            BattleScene,
+            UIScene
         ]
         };
         var game = new Phaser.Game(config);
+
+        
     </script>
 </body>
 </html>
