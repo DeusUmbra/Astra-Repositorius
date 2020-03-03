@@ -161,6 +161,7 @@
                 zone.destroy();
                 // shake the world
                 this.cameras.main.shake(300);
+                this.cameras.main.fadeOut(300);
                 var timeEvent = this.time.addEvent({delay: 300, callback: this.battleStart, callbackScope: this}); //Start battle
             },
 
@@ -169,6 +170,7 @@
                 this.cursors.right.reset();
                 this.cursors.up.reset();
                 this.cursors.down.reset();
+                this.cameras.main.fadeIn(300);
             },
 
             battleStart: function() {
@@ -189,12 +191,13 @@
             create: function ()
             {
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
+                this.cameras.main.fadeIn(300);
                 player = new PlayerCharacter(this, 150, 200, 'player', 105, 'Battlemage', 100, 20);
                 this.add.existing(player);
                 hpText = this.add.text(100, 250, 'HP: 100', { fontSize: '30px', fill: '#000' })
                 this.startBattle();
                 // on wake event we call startBattle too
-                this.sys.events.on('wake', this.startBattle, this);
+                this.sys.events.on('wake', this.wake, this);
             },
 
             exitBattle: function() {
@@ -203,7 +206,8 @@
             },
 
             wake: function() {
-                this.scene.run('UIScene');          
+                this.cameras.main.fadeIn(300);
+                this.startBattle();          
             },
 
             startBattle: function() {
@@ -226,9 +230,16 @@
 
             nextTurn: function() {  
                 // if we have victory or game over
-                if(this.checkEndBattle()) {           
-                    this.endBattle();
+                var battleState = this.checkEndBattle();
+                if(battleState === "Victory") {  
+                    this.cameras.main.fadeOut(300);         
+                    var timeEvent = this.time.addEvent({delay: 300, callback: this.exitBattle, callbackScope: this});
                     return;
+                }
+                if(battleState === "GameOver") {
+                    this.cameras.main.fadeOut(300);
+                    this.scene.remove('UIScene');
+                    var timeEvent = this.time.addEvent({delay: 400, callback: this.gameOverMan, callbackScope: this});
                 }
                 do {
                     // currently active unit
@@ -262,7 +273,10 @@
                 // if hero is dead we have game over
                 if(this.hero[0].living)
                     gameOver = false;
-                return victory || gameOver;
+                
+                if(victory) {return "Victory";}
+                else if(gameOver) {return "GameOver";}
+                else {return "Continue";}
             },
 
             endBattle: function() {       
@@ -292,6 +306,10 @@
                 }
                 this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
             },
+
+            gameOverMan: function() {
+                this.scene.start('EndScene');
+            }
         });
 
         var UIScene = new Phaser.Class({
@@ -400,6 +418,19 @@
             },
         });
 
+        var EndScene = new Phaser.Class({
+            Extends: Phaser.Scene,
+            initialize:
+
+            function EndScene() {
+                Phaser.Scene.call(this, {key: 'EndScene'});
+            },
+            create: function() {
+                this.cameras.main.fadeIn(300);
+                this.add.text(150, 200, "GAME OVER", {fontSize: '60px', fill: '#ff0000'});
+            }
+        });
+
         var config = {
         type: Phaser.AUTO,
         parent: 'content',
@@ -417,7 +448,8 @@
             BootScene,
             WorldScene,
             BattleScene,
-            UIScene
+            UIScene,
+            EndScene
         ]
         };
         var game = new Phaser.Game(config);
