@@ -189,6 +189,9 @@
             create: function ()
             {
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
+                player = new PlayerCharacter(this, 150, 200, 'player', 105, 'Battlemage', 100, 20);
+                this.add.existing(player);
+                hpText = this.add.text(100, 250, 'HP: 100', { fontSize: '30px', fill: '#000' })
                 this.startBattle();
                 // on wake event we call startBattle too
                 this.sys.events.on('wake', this.startBattle, this);
@@ -205,8 +208,8 @@
 
             startBattle: function() {
                 //Add hero and enemies, hardcoded for now.
-                var player = new PlayerCharacter(this, 150, 200, 'player', 105, 'Battlemage', 100, 20);
-                this.add.existing(player);
+                //player = new PlayerCharacter(this, 150, 200, 'player', 105, 'Battlemage', 100, 20);
+                //this.add.existing(player);
                 var eRat = new Enemy(this, 500, 100, 'rat', 0, 'Dire Rat', 50, 10);
                 this.add.existing(eRat);
                 var eBat = new Enemy(this, 500, 250, 'bat', 0, 'Dire Bat', 40, 15);
@@ -241,7 +244,8 @@
                     this.events.emit("PlayerSelect", this.index);
                 } else { // else if its enemy unit
                     // call the enemy's attack function 
-                    this.units[this.index].attack(this.hero[0]);  
+                    this.units[this.index].attack(this.hero[0]); 
+                    hpText.setText("HP: " + player.hp); 
                     // add timer for the next turn, so will have smooth gameplay
                     this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                 }
@@ -263,11 +267,10 @@
 
             endBattle: function() {       
                 // clear state, remove sprites
-                this.hero.length = 0;
                 this.enemies.length = 0;
-                for(var i = 0; i < this.units.length; i++) {
+                for(var i = 0; i < this.enemies.length; i++) {
                     // link item
-                    this.units[i].destroy();            
+                    this.enemies[i].destroy();            
                 }
                 this.units.length = 0;
                 // sleep the UI
@@ -282,6 +285,7 @@
                 }
                 else if(action == 'heal') {
                     this.units[this.index].heal();
+                    hpText.setText("HP: " + player.hp);
                 }
                 else if(action == 'Firebolt') {
                     this.units[this.index].firebolt(this.enemies[target]);
@@ -444,7 +448,9 @@
                 this.hp -= damage;
                 if(this.hp <= 0) {
                     this.hp = 0;
-                    this.menuItem.unitKilled();
+                    if(this.menuItem != null) {
+                        this.menuItem.unitKilled();
+                    }
                     this.living = false;
                     this.visible = false;   
                     this.menuItem = null;
