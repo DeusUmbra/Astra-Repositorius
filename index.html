@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Web3Final</title>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.22.0/dist/phaser.min.js"></script>
 </head>
 <body>
     <script>
@@ -277,6 +277,12 @@
                 if(action == 'attack') {            
                     this.units[this.index].attack(this.enemies[target]);              
                 }
+                else if(action == 'heal') {
+                    this.units[this.index].heal();
+                }
+                else if(action == 'Firebolt') {
+                    this.units[this.index].firebolt(this.enemies[target]);
+                }
                 this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
             },
         });
@@ -372,17 +378,18 @@
                 this.spellsMenu.select(0);
             },
 
-            onSelectEnemies: function() {
+            onSelectEnemies: function(action) {
                 this.currentMenu = this.enemiesMenu;
                 this.enemiesMenu.select(0);
+                this.enemiesMenu.setAction(action);
             },
 
-            onEnemy: function(index) {
+            onEnemy: function(action, index) {
                 this.actionsMenu.deselect();
                 this.spellsMenu.deselect();
                 this.enemiesMenu.deselect();
                 this.currentMenu = null;
-                this.battleScene.receivePlayerSelection('attack', index);
+                this.battleScene.receivePlayerSelection(action, index);
             },
         });
 
@@ -391,7 +398,7 @@
         parent: 'content',
         width: 640,
         height: 640,
-        zoom: 2,
+        zoom: 1,
         pixelArt: true,
         physics: {
             default: 'arcade',
@@ -419,7 +426,7 @@
                 this.maxHp = this.hp = hp;
                 this.damage = damage; // default damage     
                 this.living = true;         
-                this.menuItem = null;              
+                this.menuItem = null;         
             },
             setMenuItem: function(item) {
                 this.menuItem = item;
@@ -438,6 +445,9 @@
                     this.living = false;
                     this.visible = false;   
                     this.menuItem = null;
+                }
+                else if(this.hp > this.maxHp) {
+                    this.hp = this.maxHp;
                 }
             }   
         });
@@ -458,6 +468,18 @@
             function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage) {
                 Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
                 this.setScale(2);
+            },
+
+            heal: function() {
+                this.takeDamage(-50);
+                this.scene.events.emit("Message", this.type + " heals 50 health");
+            },
+
+            firebolt: function(target) {
+                if(target.living) {
+                    target.takeDamage(25);
+                    this.scene.events.emit("Message", this.type + " used Firebolt on " + target.type + " for 25 damage");
+                }
             }
         });
 
@@ -577,13 +599,17 @@
                 Menu.call(this, x, y, scene);   
                 this.addMenuItem('Attack');
                 this.addMenuItem('Spell');
+                this.addMenuItem('Heal');
             },
             confirm: function() {
                 if(this.menuItemIndex === 0) {
-                    this.scene.events.emit('SelectEnemies');
+                    this.scene.events.emit('SelectEnemies', 'attack');
                 }
                 else if (this.menuItemIndex === 1) {
                     this.scene.events.emit('SelectSpells');
+                }
+                else if (this.menuItemIndex === 2) {
+                    this.scene.events.emit('Enemy', 'heal', 0);
                 }
             }
             
@@ -599,7 +625,7 @@
                 this.addMenuItem('Firebolt');
             },
             confirm: function() {
-                this.scene.events.emit('SelectEnemies');
+                this.scene.events.emit('SelectEnemies', 'Firebolt');
             }
         });
 
@@ -607,12 +633,16 @@
             Extends: Menu,
             
             initialize:
-                    
+
             function EnemiesMenu(x, y, scene) {
-                Menu.call(this, x, y, scene);        
+                Menu.call(this, x, y, scene); 
+                this.action = 'attack';       
             },       
+            setAction: function(action) {
+                this.action = action;
+            },
             confirm: function() {        
-                this.scene.events.emit("Enemy", this.menuItemIndex);
+                this.scene.events.emit("Enemy", this.action, this.menuItemIndex);
             }
         });
 
