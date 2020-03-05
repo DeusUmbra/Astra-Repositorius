@@ -252,7 +252,7 @@
                 // if its player hero
                 if(this.units[this.index] instanceof PlayerCharacter) {
                     // we need the player to select action and then enemy
-                    this.events.emit("PlayerSelect", this.index);
+                    this.events.emit("ActionSelect", this.index);
                 } else { // else if its enemy unit
                     // call the enemy's attack function 
                     this.units[this.index].attack(this.hero[0]); 
@@ -353,7 +353,8 @@
                 this.battleScene = this.scene.get('BattleScene');
 
                 this.input.keyboard.on('keydown', this.onKeyInput, this);
-                this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
+                this.battleScene.events.on("ActionSelect", this.onActionSelect, this);
+                this.events.on("ActionSelect", this.onActionSelect, this);
                 this.events.on("SelectSpells", this.onSelectSpells, this);
                 this.events.on("SelectEnemies", this.onSelectEnemies, this);
                 this.events.on("Enemy", this.onEnemy, this);
@@ -386,16 +387,16 @@
                     } else if(event.code === "ArrowDown") {
                         this.currentMenu.moveSelectionDown();
                     } else if(event.code === "ArrowLeft" || event.code === "Shift") {
-                        //Go back
+                        this.currentMenu.back();
                     } else if(event.code === "Space" || event.code === "ArrowRight") {
                         this.currentMenu.confirm();
                     } 
                 }
             },
 
-            onPlayerSelect: function() {
-                this.actionsMenu.select(0);
+            onActionSelect: function() {
                 this.currentMenu = this.actionsMenu;
+                this.actionsMenu.select(0);
             },
 
             onSelectSpells: function() {
@@ -612,6 +613,9 @@
             confirm: function() {
                 // when the player confirms his slection, do the action
             },
+            back: function() {
+                //Go back to previous menu, if possible.
+            },
             // clear menu and remove all menu items
             clear: function() {
                 for(var i = 0; i < this.menuItems.length; i++) {
@@ -652,8 +656,12 @@
                 else if (this.menuItemIndex === 2) {
                     this.scene.events.emit('Enemy', 'heal', 0);
                 }
+            },
+            back: function() {
+                this.menuItems[this.menuItemIndex].deselect();
+                this.menuItemIndex = 0;
+                this.menuItems[this.menuItemIndex].select();
             }
-            
         });
 
         var SpellsMenu = new Phaser.Class({
@@ -667,6 +675,10 @@
             },
             confirm: function() {
                 this.scene.events.emit('SelectEnemies', 'Firebolt');
+            },
+            back: function() {
+                this.menuItems[this.menuItemIndex].deselect();
+                this.scene.events.emit('ActionSelect');
             }
         });
 
@@ -684,6 +696,15 @@
             },
             confirm: function() {        
                 this.scene.events.emit("Enemy", this.action, this.menuItemIndex);
+            },
+            back: function() {
+                this.menuItems[this.menuItemIndex].deselect();
+                if (this.action == 'attack') {
+                    this.scene.events.emit('ActionSelect');
+                }
+                else {
+                    this.scene.events.emit('SelectSpells');
+                }
             }
         });
 
