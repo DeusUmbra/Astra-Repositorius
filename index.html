@@ -32,11 +32,26 @@
 
                 // our character + other random characters
                 this.load.spritesheet('player', 'assets/sprites32x32.png', { frameWidth: 32, frameHeight: 32 });
-                //Load enemies
+                //Load small enemies
                 this.load.spritesheet("rat","assets/Small/rat.png", {frameWidth: 64, frameHeight: 64});
-                this.load.spritesheet("bat", "assets/Medium/bat.png", {frameWidth: 128, frameHeight: 128});
+                this.load.spritesheet("dune", "assets/Small/dune_crawler.png", {frameWidth: 64, frameHeight: 64});
                 this.load.spritesheet("slime", "assets/Small/green_slime.png", {frameWidth: 64, frameHeight: 64});
                 this.load.spritesheet("scorpion", "assets/Small/scorpion.png", {frameWidth: 64, frameHeight: 64});
+                this.load.spritesheet("spider", "assets/Small/spider.png", {frameWidth: 64, frameHeight: 64});
+                //Load medium enemies
+                this.load.spritesheet("bat", "assets/Medium/bat.png", {frameWidth: 128, frameHeight: 128});
+                this.load.spritesheet("demon", "assets/Medium/demon.png", {frameWidth: 128, frameHeight: 192});
+                this.load.spritesheet("skeleton", "assets/Medium/skeleton.png", {frameWidth: 64, frameHeight: 128});
+                this.load.spritesheet("snake", "assets/Medium/snake.png", {frameWidth: 128, frameHeight: 64});
+                this.load.spritesheet("tree", "assets/Medium/tree.png", {frameWidth:128, frameHeight: 128});
+                //Load large enemies
+                this.load.spritesheet("deceleon", "assets/Large/deceleon.png", {frameWidth: 256, frameHeight: 256});
+                this.load.spritesheet("drake", "assets/Large/drake.png", {frameWidth: 192, frameHeight: 256});
+                this.load.spritesheet("horror", "assets/Large/horror.png", {frameWidth: 192, frameHeight: 192});
+                this.load.spritesheet("lizard", "assets/Large/lizard.png", {frameWidth: 192, frameHeight: 192});
+                this.load.spritesheet("nagaruda", "assets/Large/nagaruda.png", {frameWidth: 192, frameHeight: 256});
+                //Load Boss
+                this.load.spritesheet("aurum", "assets/Large/aurum.png", {frameWidth: 320, frameHeight: 256});
             },
 
             create: function ()
@@ -214,17 +229,41 @@
 
             startBattle: function() {
                 //Add enemies, hardcoded for now. Trying out some new enemies and positioning.
-                var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 10, 15, 1);
-                this.add.existing(eRat);
-                var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 30, 10, 1);
-                this.add.existing(eScor);
+                //var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 10, 15, 1);
+                //this.add.existing(eRat);
+                //var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 30, 10, 1);
+                //this.add.existing(eScor);
+                //var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 50, 5, 1);
+                //this.add.existing(eSlime);
+                //var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Crawler', 35, 5, 1);
+                //this.add.existing(eDune);
+                //var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Giant Spider', 20, 20, 1);
+                //this.add.existing(eSpider);
                 //var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 20, 15, 2);
                 //this.add.existing(eBat);
-                var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 50, 5, 1);
-                this.add.existing(eSlime);
-                
+                var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton', 10, 20, 2);
+                this.add.existing(eSkel);
+                var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 20, 10, 2);
+                this.add.existing(eSnake);
+                //var eDemon = new Enemy(this, 0, 0, 'demon', 0, 'Demon', 50, 10, 2);
+                //this.add.existing(eDemon);
+                //var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Haunted Tree', 60, 5, 2);
+                //this.add.existing(eTree);
+                //var eDec = new Enemy(this, 0, 0, 'deceleon', 0, 'Deceleon', 100, 10, 3);
+                //this.add.existing(eDec);
+                //var eDrake = new Enemy(this, 0, 0, 'drake', 0, 'Drake', 100, 10, 3);
+                //this.add.existing(eDrake);
+                //var eHorror = new Enemy(this, 0, 0, 'horror', 0, 'Elder Horror', 100, 10, 3);
+                //this.add.existing(eHorror);
+                //var eLizard = new Enemy(this, 0, 0, 'lizard', 0, 'Lizard Beast', 100, 10, 3);
+                //this.add.existing(eLizard);
+                //var eNaga = new Enemy(this, 0, 0, 'nagaruda', 0, 'Nagaruda', 100, 10, 3);
+                //this.add.existing(eNaga);
+                //var eAurum = new Enemy(this, 400, 200, 'aurum', 0, 'Aurum', 500, 50, 4);
+                //this.add.existing(eAurum);
+
                 this.hero = [player];
-                this.enemies = [eRat, eSlime, eScor];
+                this.enemies = [eSkel, eSnake];
                 this.units = this.hero.concat(this.enemies); //Puts everything into one list
                 
                 this.index = -1; // currently active unit
