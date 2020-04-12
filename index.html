@@ -55,11 +55,26 @@
                 this.load.spritesheet("nagaruda", "assets/Large/nagaruda.png", {frameWidth: 192, frameHeight: 256});
                 //Load Boss
                 this.load.spritesheet("aurum", "assets/Large/aurum.png", {frameWidth: 320, frameHeight: 256});
+                //Load Music
+                this.load.audio("Start", "assets/Music/Start.ogg");
+                this.load.audio("World", "assets/Music/World.ogg");
+                this.load.audio("Battle", "assets/Music/Battle.ogg");
+                this.load.audio("Boss", "assets/Music/Boss.ogg");
+                this.load.audio("GameOver", "assets/Music/GameOver.ogg");
+                //Load SFX
+                this.load.audio("Attack", "assets/SFX/attack.wav");
+                this.load.audio("Spell", "assets/SFX/spell.wav");
+                this.load.audio("Select", "assets/SFX/select.wav");
+                this.load.audio("Confirm", "assets/SFX/confirm.wav");
+                this.load.audio("Back", "assets/SFX/back.wav");
             },
 
             create: function ()
             {
                 this.cameras.main.flash(2000);
+                this.soundFX = this.sound.add("Start", {loop: "true"});
+                this.soundFX.setVolume(0.5);
+                this.soundFX.play();
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
                 this.add.image(0, 0, 'start').setOrigin(0,0);
                 this.add.text(80, 200, "Web 3 Project", {fontSize: '60px', fill: "#0b1f01"})
@@ -71,6 +86,7 @@
                 var twait = this.time.addEvent({delay: 1000, callback: this.startGame, callbackScope: this});
             },
             startGame: function() {
+                this.soundFX.stop();
                 this.scene.start('WorldScene');
             }
         });
@@ -92,7 +108,10 @@
             create: function ()
             {
                 this.cameras.main.fadeIn(500);
-                // create your world here
+                this.soundFX = this.sound.add("World", {loop: "true"});
+                this.soundFX.setVolume(0.5);
+                this.soundFX.play();
+                // create world
                 var map = this.make.tilemap({ key: 'map' });
 
                 var tiles = map.addTilesetImage('spritesheet', 'tiles');
@@ -204,9 +223,11 @@
                 this.cursors.up.reset();
                 this.cursors.down.reset();
                 this.cameras.main.fadeIn(300);
+                this.soundFX.play();
             },
 
             battleStart: function() {
+                this.soundFX.stop();
                 this.scene.switch('BattleScene');
             }
         });
@@ -225,6 +246,9 @@
             {
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
                 this.cameras.main.fadeIn(300);
+                this.soundFX = this.sound.add("Battle", {loop: "true"});
+                this.soundFX.setVolume(0.5);
+                this.soundFX.play();
                 player = new PlayerCharacter(this, 100, 200, 'player', 105, 'Battlemage', 100, 20);
                 this.add.existing(player);
                 hpText = this.add.text(50, 250, 'HP: 100', { fontSize: '30px', fill: '#000' })
@@ -234,12 +258,14 @@
             },
 
             exitBattle: function() {
+                this.soundFX.stop();
                 this.scene.sleep('UIScene');
                 this.scene.switch('WorldScene');
             },
 
             wake: function() {
                 this.cameras.main.fadeIn(300);
+                this.soundFX.play();
                 this.startBattle();          
             },
 
@@ -342,6 +368,7 @@
                     this.units[this.index].attack(this.hero[0]); 
                     hpText.setText("HP: " + player.hp); 
                     this.cameras.main.shake(100);
+                    this.sound.play("Attack");
                     // add timer for the next turn, so will have smooth gameplay
                     this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                 }
@@ -381,19 +408,23 @@
             receivePlayerSelection: function(action, target) {
                 if(action == 'attack') {            
                     this.units[this.index].attack(this.enemies[target]);              
+                    this.sound.play("Attack");
                 }
                 else if(action == 'heal') {
                     this.units[this.index].heal();
                     hpText.setText("HP: " + player.hp);
+                    this.sound.play("Spell");
                 }
                 else if(action == 'Firebolt') {
                     this.units[this.index].firebolt(this.enemies[target]);
+                    this.sound.play("Spell");
                 }
                 this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
             },
 
             gameOverMan: function() {
                 this.scene.start('EndScene');
+                this.soundFX.stop();
             }
         });
 
@@ -466,12 +497,16 @@
                 if(this.currentMenu && this.currentMenu.selected) {
                     if(event.code === "ArrowUp") {
                         this.currentMenu.moveSelectionUp();
+                        this.sound.play("Select");
                     } else if(event.code === "ArrowDown") {
                         this.currentMenu.moveSelectionDown();
+                        this.sound.play("Select");
                     } else if(event.code === "ArrowLeft" || event.code === "Shift") {
                         this.currentMenu.back();
+                        this.sound.play("Back");
                     } else if(event.code === "Space" || event.code === "ArrowRight") {
                         this.currentMenu.confirm();
+                        this.sound.play("Confirm");
                     } 
                 }
             },
@@ -510,6 +545,9 @@
             },
             create: function() {
                 this.cameras.main.fadeIn(300);
+                this.soundFX = this.sound.add("GameOver", {loop: "true"});
+                this.soundFX.setVolume(0.5);
+                this.soundFX.play();
                 this.add.text(150, 200, "GAME OVER", {fontSize: '60px', fill: '#ff0000'});
             }
         });
