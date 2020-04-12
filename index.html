@@ -314,8 +314,10 @@
                 // if we have victory or game over
                 var battleState = this.checkEndBattle();
                 if(battleState === "Victory") {  
-                    this.cameras.main.fadeOut(300);         
-                    var timeEvent = this.time.addEvent({delay: 300, callback: this.exitBattle, callbackScope: this});
+                    player.expGain();
+                    hpText.setText("HP: " + player.hp);
+                    this.cameras.main.fadeOut(500);         
+                    var timeEvent = this.time.addEvent({delay: 500, callback: this.exitBattle, callbackScope: this});
                     return;
                 }
                 if(battleState === "GameOver") {
@@ -453,14 +455,11 @@
 
             createMenu: function() {
                 // map enemies menu items to enemies
-                this.remapEnemies();
-                // first move
-                this.battleScene.nextTurn(); 
-            },
-
-            remapEnemies: function() {
                 var enemies = this.battleScene.enemies;
                 this.enemiesMenu.remap(enemies);
+                this.spellsMenu.remap(player.spells);
+                // first move
+                this.battleScene.nextTurn(); 
             },
 
             onKeyInput: function(event) {
@@ -592,9 +591,29 @@
         
             initialize:
             function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage) {
-                Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
+                Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
+                this.type = type;
+                this.maxHp = this.hp = hp;
+                this.damage = damage;     
+                this.living = true;         
+                this.menuItem = null;
                 this.setScale(2);
+                this.spellDamage = damage + 5;
                 this.exp = 0;
+                this.level = 1;
+                this.spells = ["Firebolt"];
+            },
+
+            expGain: function() {
+                this.exp += 1;
+                if (this.exp == 3) {
+                    this.exp = 0;
+                    this.level += 1;
+                    this.spellDamage += 5;
+                    this.maxHp += 10;
+                    this.hp = this.maxHp;
+                    this.scene.events.emit("Message", "Level Up! You are now Level " + this.level + "!");
+                }
             },
 
             heal: function() {
@@ -604,8 +623,8 @@
 
             firebolt: function(target) {
                 if(target.living) {
-                    target.takeDamage(25);
-                    this.scene.events.emit("Message", this.type + " used Firebolt on " + target.type + " for 25 damage");
+                    target.takeDamage(this.spellDamage);
+                    this.scene.events.emit("Message", this.type + " used Firebolt on " + target.type + " for "+ this.spellDamage + " damage");
                 }
             }
         });
@@ -708,15 +727,6 @@
                 }
                 this.menuItems.length = 0;
                 this.menuItemIndex = 0;
-            },
-            // recreate the menu items
-            remap: function(units) {
-                this.clear();        
-                for(var i = 0; i < units.length; i++) {
-                    var unit = units[i];
-                    unit.setMenuItem(this.addMenuItem(unit.type));            
-                }
-                this.menuItemIndex = 0;
             }
         });
 
@@ -756,7 +766,6 @@
 
             function SpellMenu(x, y, scene) {
                 Menu.call(this, x, y, scene);
-                this.addMenuItem('Firebolt');
             },
             confirm: function() {
                 this.scene.events.emit('SelectEnemies', 'Firebolt');
@@ -764,6 +773,14 @@
             back: function() {
                 this.menuItems[this.menuItemIndex].deselect();
                 this.scene.events.emit('ActionSelect');
+            },
+            remap: function(spells) {
+                this.clear();        
+                for(var i = 0; i < spells.length; i++) {
+                    var spell = spells[i];
+                    this.addMenuItem(spell);            
+                }
+                this.menuItemIndex = 0;
             }
         });
 
@@ -790,6 +807,14 @@
                 else {
                     this.scene.events.emit('SelectSpells');
                 }
+            },
+            remap: function(units) {
+                this.clear();        
+                for(var i = 0; i < units.length; i++) {
+                    var unit = units[i];
+                    unit.setMenuItem(this.addMenuItem(unit.type));            
+                }
+                this.menuItemIndex = 0;
             }
         });
 
