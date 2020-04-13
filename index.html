@@ -304,31 +304,63 @@
                 //var eAurum = new Enemy(this, 400, 200, 'aurum', 0, 'Aurum', 500, 50, 4);
                 //this.add.existing(eAurum);
 
-                var rng = Phaser.Math.Between(1, 3);
-                if(rng == 1) {
-                    var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 10, 15, 1);
-                    this.add.existing(eRat);
-                    var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 30, 10, 1);
+                var rng = Phaser.Math.Between(1, 8);
+                if (rng == 1) {
+                    var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Giant Spider', 5, 5, 1);
+                    this.add.existing(eSpider);
+                    this.enemies = [eSpider];
+                }
+                else if (rng == 2) {
+                    var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Dire Scorpion', 5, 5, 1);
                     this.add.existing(eScor);
-                    var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 50, 5, 1);
+                    var eDune = new Enemy(this, 400, 300, 'dune', 0, 'Dune Crawler', 5, 5, 1);
+                    this.add.existing(eDune);
+                    this.enemies = [eScor, eDune];
+                }
+                else if(rng == 3) {
+                    var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                    this.add.existing(eRat);
+                    var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 5, 5, 1);
+                    this.add.existing(eScor);
+                    var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 5, 5, 1);
                     this.add.existing(eSlime);
                     this.enemies = [eRat, eScor, eSlime];
                 }
-                else if (rng == 2){
-                    var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton', 10, 20, 2);
+                else if (rng == 4) {
+                    var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Haunted Tree', 5, 5, 2);
+                    this.add.existing(eTree);
+                    this.enemies = [eTree];
+                }
+                else if (rng == 5){
+                    var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton', 5, 5, 2);
                     this.add.existing(eSkel);
-                    var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 20, 10, 2);
+                    var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 5, 5, 2);
                     this.add.existing(eSnake);
                     this.enemies = [eSkel, eSnake];
                 }
-                else if (rng == 3){
-                    var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 100, 20, 3);
+                else if (rng == 6) {
+                    var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                    this.add.existing(eRat);
+                    var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                    this.add.existing(eBat);
+                    this.enemies = [eRat, eBat];
+                }
+                else if (rng == 7) {
+                    var eDemon = new Enemy(this, 550, 200, 'demon', 0, 'Demon', 5, 5, 2);
+                    this.add.existing(eDemon);
+                    var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime A', 5, 5, 1);
+                    this.add.existing(eSlime);
+                    var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime B', 5, 5, 1);
+                    this.add.existing(eSlime2);
+                    this.enemies = [eSlime, eDemon, eSlime2];
+                }
+                else if (rng == 8){
+                    var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 5, 5, 3);
                     this.add.existing(eHorror);
                     this.enemies = [eHorror];
                 }
 
                 this.hero = [player];
-                //this.enemies = [eSkel, eSnake];
                 this.units = this.hero.concat(this.enemies); //Puts everything into one list
                 
                 this.index = -1; // currently active unit
