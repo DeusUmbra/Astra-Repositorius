@@ -33,7 +33,7 @@
                 //Load start screen image
                 this.load.image('start', 'assets/sky.png');
 
-                // our character + other random characters
+                // our character + other random characters we probably won't use
                 this.load.spritesheet('player', 'assets/sprites32x32.png', { frameWidth: 32, frameHeight: 32 });
                 //Load small enemies
                 this.load.spritesheet("rat","assets/Small/rat.png", {frameWidth: 64, frameHeight: 64});
@@ -71,23 +71,23 @@
 
             create: function ()
             {
-                this.cameras.main.flash(2000);
-                this.soundFX = this.sound.add("Start", {loop: "true"});
+                this.cameras.main.flash(2000); //Nice visual effect on load up.
+                this.soundFX = this.sound.add("Start", {loop: "true"}); //Set up start screen music
                 this.soundFX.setVolume(0.5);
-                this.soundFX.play();
-                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
-                this.add.image(0, 0, 'start').setOrigin(0,0);
-                this.add.text(80, 200, "Web 3 Project", {fontSize: '60px', fill: "#0b1f01"})
-                this.add.text(100, 300, "Press any key to start.", {fontSize: '30px', fill: "#0b1f01"});
-                this.input.keyboard.on('keydown', this.fade, this);
+                this.soundFX.play(); //Play music
+                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)'); //Set color to represent the ground, similar to the battle scene.
+                this.add.image(0, 0, 'start').setOrigin(0,0); //Sky image for nicer looking background.
+                this.add.text(80, 200, "Web 3 Project", {fontSize: '60px', fill: "#0b1f01"}); //Generic title text
+                this.add.text(100, 300, "Press any key to start.", {fontSize: '30px', fill: "#0b1f01"}); //Inform player how to start
+                this.input.keyboard.on('keydown', this.fade, this); //Begin on any button pressed
             },
-            fade: function() {
+            fade: function() { //First, we fade out slowly, then call the function that starts the game.
                 this.cameras.main.fadeOut(1000);
-                var twait = this.time.addEvent({delay: 1000, callback: this.startGame, callbackScope: this});
+                var wait = this.time.addEvent({delay: 1000, callback: this.startGame, callbackScope: this});
             },
             startGame: function() {
-                this.soundFX.stop();
-                this.scene.start('WorldScene');
+                this.soundFX.stop(); //Stop intro music so music does not overlap.
+                this.scene.start('WorldScene'); //Start world map screen.
             }
         });
 
@@ -107,29 +107,29 @@
             },
             create: function ()
             {
-                this.cameras.main.fadeIn(500);
-                this.soundFX = this.sound.add("World", {loop: "true"});
+                this.cameras.main.fadeIn(500); //Visual effects again
+                this.soundFX = this.sound.add("World", {loop: "true"}); //Music again
                 this.soundFX.setVolume(0.5);
                 this.soundFX.play();
                 // create world
                 var map = this.make.tilemap({ key: 'map' });
 
-                var tiles = map.addTilesetImage('spritesheet', 'tiles');
+                var tiles = map.addTilesetImage('spritesheet', 'tiles'); //Lets the game understand the map
                         
-                var background = map.createStaticLayer('Background', tiles, 0, 0);
+                var background = map.createStaticLayer('Background', tiles, 0, 0); //Creating layers based on the layers in the map file
                 var obstacles = map.createStaticLayer('Blocked', tiles, 0, 0);
-                obstacles.setCollisionByExclusion([-1]);
+                obstacles.setCollisionByExclusion([-1]); //Make sure player can't just walk through walls.
 
                 this.player = this.physics.add.sprite(550, 550, 'player', 97); //Player sprite
 
                 this.physics.world.bounds.width = map.widthInPixels; //Map borders
                 this.physics.world.bounds.height = map.heightInPixels;
-                this.player.setCollideWorldBounds(true);
+                this.player.setCollideWorldBounds(true); //No walking outside of the world. 
 
-                this.cursors = this.input.keyboard.createCursorKeys(); //Allow input
+                this.cursors = this.input.keyboard.createCursorKeys(); //Allow input for later
 
                 this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels); //Set up bounds for map
-                this.cameras.main.startFollow(this.player);
+                this.cameras.main.startFollow(this.player); //Just in case we change the zoom level.
                 this.cameras.main.roundPixels = true;
 
                 //Animations for player
@@ -157,7 +157,7 @@
                     frameRate: 10,
                     repeat: -1
                 });
-                this.physics.add.collider(this.player, obstacles); //Collision
+                this.physics.add.collider(this.player, obstacles); //Collision between player and obstacles
 
                 this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone }); //invisible enemy generation
                 for(var i = 1; i <= 6; i++) {
@@ -211,7 +211,7 @@
             onMeetEnemy: function(player, zone) {
                 //Destroy enemy
                 zone.destroy();
-                // shake the world
+                // shake the world and fade out
                 this.cameras.main.shake(300);
                 this.cameras.main.fadeOut(300);
                 var timeEvent = this.time.addEvent({delay: 300, callback: this.battleStart, callbackScope: this}); //Start battle
@@ -244,14 +244,14 @@
             },
             create: function ()
             {
-                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
+                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)'); //Background that looks kinda like grass
                 this.cameras.main.fadeIn(300);
-                this.soundFX = this.sound.add("Battle", {loop: "true"});
+                this.soundFX = this.sound.add("Battle", {loop: "true"}); //Music
                 this.soundFX.setVolume(0.5);
                 this.soundFX.play();
-                player = new PlayerCharacter(this, 100, 200, 'player', 105, 'Battlemage', 100, 20);
+                player = new PlayerCharacter(this, 100, 200, 'player', 105, 'Battlemage', 100, 5); //Get us a player character!
                 this.add.existing(player);
-                hpText = this.add.text(50, 250, 'HP: 100', { fontSize: '30px', fill: '#000' })
+                hpText = this.add.text(50, 250, 'HP: 100', { fontSize: '30px', fill: '#000' }); //Show some text for current HP
                 this.startBattle();
                 // on wake event we call startBattle too
                 this.sys.events.on('wake', this.wake, this);
@@ -270,82 +270,144 @@
             },
 
             startBattle: function() {
-                //Add enemies, hardcoded for now. Trying out some new enemies and positioning.
-                //var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 10, 15, 1);
-                //this.add.existing(eRat);
-                //var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 30, 10, 1);
-                //this.add.existing(eScor);
-                //var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 50, 5, 1);
-                //this.add.existing(eSlime);
-                //var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Crawler', 35, 5, 1);
-                //this.add.existing(eDune);
-                //var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Giant Spider', 20, 20, 1);
-                //this.add.existing(eSpider);
-                //var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 20, 15, 2);
-                //this.add.existing(eBat);
-                //var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton', 10, 20, 2);
-                //this.add.existing(eSkel);
-                //var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 20, 10, 2);
-                //this.add.existing(eSnake);
-                //var eDemon = new Enemy(this, 0, 0, 'demon', 0, 'Demon', 50, 10, 2);
-                //this.add.existing(eDemon);
-                //var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Haunted Tree', 60, 5, 2);
-                //this.add.existing(eTree);
-                //var eDec = new Enemy(this, 0, 0, 'deceleon', 0, 'Deceleon', 100, 10, 3);
-                //this.add.existing(eDec);
-                //var eDrake = new Enemy(this, 0, 0, 'drake', 0, 'Drake', 100, 10, 3);
-                //this.add.existing(eDrake);
-                //var eHorror = new Enemy(this, 0, 0, 'horror', 0, 'Elder Horror', 100, 10, 3);
-                //this.add.existing(eHorror);
-                //var eLizard = new Enemy(this, 0, 0, 'lizard', 0, 'Lizard Beast', 100, 10, 3);
-                //this.add.existing(eLizard);
-                //var eNaga = new Enemy(this, 0, 0, 'nagaruda', 0, 'Nagaruda', 100, 10, 3);
-                //this.add.existing(eNaga);
                 //var eAurum = new Enemy(this, 400, 200, 'aurum', 0, 'Aurum', 500, 50, 4);
                 //this.add.existing(eAurum);
 
-                var rng = Phaser.Math.Between(1, 8);
-                if (rng == 1) {
-                    var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Giant Spider', 5, 5, 1);
-                    this.add.existing(eSpider);
-                    this.enemies = [eSpider];
+                var rng = Phaser.Math.Between(1, 8); //Get number for random enemy grouping
+                if (rng == 1) { //One Small
+                    rng = Phaser.Math.Between(1,5); //Get a number for random enemy
+                    if (rng == 1) {
+                        var eRat = new Enemy(this, 550, 200, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                        this.add.existing(eRat);
+                        this.enemies = [eRat];
+                    }
+                    else if (rng == 2) {
+                        var eScor = new Enemy(this, 550, 200, 'scorpion', 0, 'Scorpion', 5, 5, 1);
+                        this.add.existing(eScor);
+                        this.enemies = [eScor];
+                    }
+                    else if (rng == 3) {
+                        var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 5, 5, 1);
+                        this.add.existing(eSlime);
+                        this.enemies = [eSlime];
+                    }
+                    else if (rng == 4) {
+                        var eDune = new Enemy(this, 550, 200, 'dune', 0, 'Dune Crawler', 5, 5, 1);
+                        this.add.existing(eDune);
+                        this.enemies = [eDune];
+                    }
+                    else if (rng == 5) {
+                        var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Dire Spider', 5, 5, 1);
+                        this.add.existing(eSpider);
+                        this.enemies = [eSpider];
+                    }
                 }
-                else if (rng == 2) {
-                    var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Dire Scorpion', 5, 5, 1);
+                else if (rng == 2) { //Two Small
+                    var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion', 5, 5, 1);
                     this.add.existing(eScor);
                     var eDune = new Enemy(this, 400, 300, 'dune', 0, 'Dune Crawler', 5, 5, 1);
                     this.add.existing(eDune);
                     this.enemies = [eScor, eDune];
                 }
-                else if(rng == 3) {
+                else if (rng == 3) { //Three Small
                     var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 5, 1);
                     this.add.existing(eRat);
-                    var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Dire Scorpion', 5, 5, 1);
+                    var eScor = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion', 5, 5, 1);
                     this.add.existing(eScor);
                     var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 5, 5, 1);
                     this.add.existing(eSlime);
                     this.enemies = [eRat, eScor, eSlime];
                 }
-                else if (rng == 4) {
-                    var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Haunted Tree', 5, 5, 2);
-                    this.add.existing(eTree);
-                    this.enemies = [eTree];
+                else if (rng == 4) { //One Medium
+                    rng = Phaser.Math.Between(1,5);
+                    if (rng == 1) {
+                        var eBat = new Enemy(this, 550, 200, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                        this.add.existing(eBat);
+                        this.enemies = [eBat];
+                    }
+                    else if (rng == 2) {
+                        var eSkel = new Enemy(this, 550, 200, 'skeleton', 0, 'Skeleton', 5, 5, 2);
+                        this.add.existing(eSkel);
+                        this.enemies = [eSkel];
+                    }
+                    else if (rng == 3) {
+                        var eSnake = new Enemy(this, 550, 200, 'snake', 0, 'Dire Snake', 5, 5, 2);
+                        this.add.existing(eSnake);
+                        this.enemies = [eSnake];
+                    }
+                    else if (rng == 4) {
+                        var eDemon = new Enemy(this, 550, 200, 'demon', 0, 'Demon', 5, 5, 2);
+                        this.add.existing(eDemon);
+                        this.enemies = [eDemon];
+                    }
+                    else if (rng == 5) {
+                        var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Cursed Tree', 5, 5, 2);
+                        this.add.existing(eTree);
+                        this.enemies = [eTree];
+                    }
                 }
-                else if (rng == 5){
+                else if (rng == 5){ //Two Medium
                     var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton', 5, 5, 2);
                     this.add.existing(eSkel);
                     var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 5, 5, 2);
                     this.add.existing(eSnake);
                     this.enemies = [eSkel, eSnake];
                 }
-                else if (rng == 6) {
-                    var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 5, 1);
-                    this.add.existing(eRat);
-                    var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 5, 5, 2);
-                    this.add.existing(eBat);
-                    this.enemies = [eRat, eBat];
+                else if (rng == 6) { //One Medium, One Small
+                    rng = Phaser.Math.Between(1,5); //Get a number for random enemy 1
+                    if (rng == 1) {
+                        var eRat = new Enemy(this, 550, 200, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                        this.add.existing(eRat);
+                        this.enemies = [eRat];
+                    }
+                    else if (rng == 2) {
+                        var eScor = new Enemy(this, 550, 200, 'scorpion', 0, 'Scorpion', 5, 5, 1);
+                        this.add.existing(eScor);
+                        this.enemies = [eScor];
+                    }
+                    else if (rng == 3) {
+                        var eSlime = new Enemy(this, 550, 200, 'slime', 0, 'Slime', 5, 5, 1);
+                        this.add.existing(eSlime);
+                        this.enemies = [eSlime];
+                    }
+                    else if (rng == 4) {
+                        var eDune = new Enemy(this, 550, 200, 'dune', 0, 'Dune Crawler', 5, 5, 1);
+                        this.add.existing(eDune);
+                        this.enemies = [eDune];
+                    }
+                    else if (rng == 5) {
+                        var eSpider = new Enemy(this, 550, 200, 'spider', 0, 'Dire Spider', 5, 5, 1);
+                        this.add.existing(eSpider);
+                        this.enemies = [eSpider];
+                    }
+                    rng = Phaser.Math.Between(1,5); //Get a random number for enemy 2
+                    if (rng == 1) {
+                        var eBat = new Enemy(this, 550, 200, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                        this.add.existing(eBat);
+                        this.enemies.push(eBat);
+                    }
+                    else if (rng == 2) {
+                        var eSkel = new Enemy(this, 550, 200, 'skeleton', 0, 'Skeleton', 5, 5, 2);
+                        this.add.existing(eSkel);
+                        this.enemies.push(eSkel);
+                    }
+                    else if (rng == 3) {
+                        var eSnake = new Enemy(this, 550, 200, 'snake', 0, 'Dire Snake', 5, 5, 2);
+                        this.add.existing(eSnake);
+                        this.enemies.push(eSnake);
+                    }
+                    else if (rng == 4) {
+                        var eDemon = new Enemy(this, 550, 200, 'demon', 0, 'Demon', 5, 5, 2);
+                        this.add.existing(eDemon);
+                        this.enemies.push(eDemon);
+                    }
+                    else if (rng == 5) {
+                        var eTree = new Enemy(this, 550, 200, 'tree', 0, 'Cursed Tree', 5, 5, 2);
+                        this.add.existing(eTree);
+                        this.enemies.push(eTree);
+                    }
                 }
-                else if (rng == 7) {
+                else if (rng == 7) { //One Medium, Two Small
                     var eDemon = new Enemy(this, 550, 200, 'demon', 0, 'Demon', 5, 5, 2);
                     this.add.existing(eDemon);
                     var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime A', 5, 5, 1);
@@ -354,10 +416,37 @@
                     this.add.existing(eSlime2);
                     this.enemies = [eSlime, eDemon, eSlime2];
                 }
-                else if (rng == 8){
-                    var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 5, 5, 3);
-                    this.add.existing(eHorror);
-                    this.enemies = [eHorror];
+                else if (rng == 8){ //One Large Enemy
+                    rng = Phaser.Math.Between(1,5);
+                    if (rng == 1) {
+                        var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 5, 5, 3);
+                        this.add.existing(eHorror);
+                        this.enemies = [eHorror];
+                    }
+                    else if (rng == 2) {
+                        var eDrake = new Enemy(this, 500, 200, 'drake', 0, 'Drake', 5, 5, 3);
+                        this.add.existing(eDrake);
+                        this.enemies = [eDrake];
+                    }
+                    else if (rng == 3) {
+                        var eDec = new Enemy(this, 500, 200, 'deceleon', 0, 'Deceleon', 5, 5, 3);
+                        this.add.existing(eDec);
+                        this.enemies = [eDec];
+                    }
+                    else if (rng == 4) {
+                        var eLizard = new Enemy(this, 500, 200, 'lizard', 0, 'Lizard Beast', 5, 5, 3);
+                        this.add.existing(eLizard);
+                        this.enemies = [eLizard];
+                    }
+                    else if (rng == 5) {
+                        var eNaga = new Enemy(this, 500, 200, 'nagaruda', 0, 'Nagaruda', 5, 5, 3);
+                        this.add.existing(eNaga);
+                        this.enemies = [eNaga];
+                    }
+                }
+                exp = 0; //We will determine how much Experience to give based on the size of the enemies put together.
+                for (var i = 0; i < this.enemies.length; i++) {
+                    exp += this.enemies[i].size;
                 }
 
                 this.hero = [player];
@@ -372,13 +461,13 @@
                 // if we have victory or game over
                 var battleState = this.checkEndBattle();
                 if(battleState === "Victory") {  
-                    player.expGain();
-                    hpText.setText("HP: " + player.hp);
+                    player.expGain(exp); //Gain Exp
+                    hpText.setText("HP: " + player.hp); //Leveling Up refills HP so this will reflect that if it comes up.
                     this.cameras.main.fadeOut(500);         
                     var timeEvent = this.time.addEvent({delay: 500, callback: this.exitBattle, callbackScope: this});
                     return;
                 }
-                if(battleState === "GameOver") {
+                if(battleState === "GameOver") { //YOU LOSE!
                     this.cameras.main.fadeOut(300);
                     this.scene.remove('UIScene');
                     var timeEvent = this.time.addEvent({delay: 400, callback: this.gameOverMan, callbackScope: this});
@@ -393,13 +482,14 @@
                 } while(!this.units[this.index].living);
                 // if its player hero
                 if(this.units[this.index] instanceof PlayerCharacter) {
-                    // we need the player to select action and then enemy
+                    // we need the player to select action
                     this.events.emit("ActionSelect", this.index);
-                } else { // else if its enemy unit
+                } 
+                else { // else if its enemy unit
                     // call the enemy's attack function 
                     this.units[this.index].attack(this.hero[0]); 
-                    hpText.setText("HP: " + player.hp); 
-                    this.cameras.main.shake(100);
+                    hpText.setText("HP: " + player.hp); //Show the new HP total
+                    this.cameras.main.shake(100); //Visual effect for the player to understand they got hurt.
                     this.sound.play("Attack");
                     // add timer for the next turn, so will have smooth gameplay
                     this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
@@ -420,7 +510,7 @@
                 
                 if(victory) {return "Victory";}
                 else if(gameOver) {return "GameOver";}
-                else {return "Continue";}
+                else {return "Continue";} //May introduce a Run Away option later
             },
 
             endBattle: function() {       
@@ -437,24 +527,24 @@
                 this.scene.switch('WorldScene');
             },
 
-            receivePlayerSelection: function(action, target) {
+            receivePlayerSelection: function(action, target) { //This lets us understand what the player is trying to do in the menues.
                 if(action == 'attack') {            
                     this.units[this.index].attack(this.enemies[target]);              
-                    this.sound.play("Attack");
+                    this.sound.play("Attack"); //Play associated sound effect
                 }
                 else if(action == 'heal') {
                     this.units[this.index].heal();
                     hpText.setText("HP: " + player.hp);
                     this.sound.play("Spell");
                 }
-                else if(action == 'Firebolt') {
+                else if(action == 'Firebolt') { //This may be changed later.
                     this.units[this.index].firebolt(this.enemies[target]);
                     this.sound.play("Spell");
                 }
                 this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
             },
 
-            gameOverMan: function() {
+            gameOverMan: function() { //Launch the game over screen
                 this.scene.start('EndScene');
                 this.soundFX.stop();
             }
@@ -473,7 +563,8 @@
 
             create: function ()
             {    
-                this.graphics = this.add.graphics();
+                console.log("Use Arrow Keys to interact with menues."); //Just for a little bit of help outside of the Readme.
+                this.graphics = this.add.graphics(); //Make the menu boxes
                 this.graphics.lineStyle(1, 0xffffff);
                 this.graphics.fillStyle(0x031f4c, 1);        
                 this.graphics.strokeRect(2, 430, 210, 205);
@@ -486,7 +577,7 @@
                 // basic container to hold all menus
                 this.menus = this.add.container();
                 
-                this.actionsMenu = new ActionsMenu(18, 430, this);           
+                this.actionsMenu = new ActionsMenu(18, 430, this);           //Get menues set up
                 this.spellsMenu = new SpellsMenu(230, 430, this);            
                 this.enemiesMenu = new EnemiesMenu(442, 430, this);   
                 
@@ -498,11 +589,11 @@
                 this.menus.add(this.spellsMenu);
                 this.menus.add(this.enemiesMenu);
 
-                this.battleScene = this.scene.get('BattleScene');
+                this.battleScene = this.scene.get('BattleScene'); //Needed to access battle stuff
 
-                this.input.keyboard.on('keydown', this.onKeyInput, this);
-                this.battleScene.events.on("ActionSelect", this.onActionSelect, this);
-                this.events.on("ActionSelect", this.onActionSelect, this);
+                this.input.keyboard.on('keydown', this.onKeyInput, this); //Get input
+                this.battleScene.events.on("ActionSelect", this.onActionSelect, this); //This one makes sure the battlescene can understand too.
+                this.events.on("ActionSelect", this.onActionSelect, this); //Event callouts for each menu
                 this.events.on("SelectSpells", this.onSelectSpells, this);
                 this.events.on("SelectEnemies", this.onSelectEnemies, this);
                 this.events.on("Enemy", this.onEnemy, this);
@@ -520,13 +611,13 @@
                 // map enemies menu items to enemies
                 var enemies = this.battleScene.enemies;
                 this.enemiesMenu.remap(enemies);
-                this.spellsMenu.remap(player.spells);
+                this.spellsMenu.remap(player.spells); //Also set up spells menu, spells will be expanded later
                 // first move
                 this.battleScene.nextTurn(); 
             },
 
             onKeyInput: function(event) {
-                if(this.currentMenu && this.currentMenu.selected) {
+                if(this.currentMenu && this.currentMenu.selected) { //Just to figure out what the player is trying to do
                     if(event.code === "ArrowUp") {
                         this.currentMenu.moveSelectionUp();
                         this.sound.play("Select");
@@ -576,15 +667,15 @@
                 Phaser.Scene.call(this, {key: 'EndScene'});
             },
             create: function() {
-                this.cameras.main.fadeIn(300);
-                this.soundFX = this.sound.add("GameOver", {loop: "true"});
+                this.cameras.main.fadeIn(300); //Visual stuff
+                this.soundFX = this.sound.add("GameOver", {loop: "true"}); //Music
                 this.soundFX.setVolume(0.5);
                 this.soundFX.play();
-                this.add.text(150, 200, "GAME OVER", {fontSize: '60px', fill: '#ff0000'});
+                this.add.text(150, 200, "GAME OVER", {fontSize: '60px', fill: '#ff0000'}); //Gotta let the player know what's up.
             }
         });
 
-        var config = {
+        var config = { //OOOOH BOY complicated phaser stuff like setting screen size and zoom.
         type: Phaser.AUTO,
         parent: 'content',
         width: 640,
@@ -610,37 +701,37 @@
         var Unit = new Phaser.Class({
             Extends: Phaser.GameObjects.Sprite,
         
-            initialize:
+            initialize: //This class will be a catch-all for some basic info for all enemies, the player, and the future boss.
         
             function Unit(scene, x, y, texture, frame, type, hp, damage) {
-                Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
-                this.type = type;
-                this.maxHp = this.hp = hp;
+                Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame); //Visual representation
+                this.type = type; //Basically a name
+                this.maxHp = this.hp = hp; //Set up their Max HP and current HP
                 this.damage = damage; // default damage     
-                this.living = true;         
+                this.living = true;         //ITS ALIVE! ALIVE!!!
                 this.menuItem = null;         
             },
             setMenuItem: function(item) {
-                this.menuItem = item;
+                this.menuItem = item; //Mainly for enemies, won't really be needed for the hero, but will be for the boss as well.
             },
             attack: function(target) {
-                if(target.living) {
+                if(target.living) { //Basic attack, make sure we can't somehow hit a dead enemy.
                     target.takeDamage(this.damage);
                     this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
                 }
             },    
             takeDamage: function(damage) {
-                this.hp -= damage;
-                if(this.hp <= 0) {
-                    this.hp = 0;
+                this.hp -= damage; //Talk S*** get Hit
+                if(this.hp <= 0) { //IS HE DEAD?!
+                    this.hp = 0; //He's dead Jim
                     if(this.menuItem != null) {
                         this.menuItem.unitKilled();
                     }
-                    this.living = false;
-                    this.visible = false;   
+                    this.living = false; 
+                    this.visible = false; //Get him out of here!   
                     this.menuItem = null;
                 }
-                else if(this.hp > this.maxHp) {
+                else if(this.hp > this.maxHp) { //This handles Healing and makes sure they can't surpass the Max HP
                     this.hp = this.maxHp;
                 }
             }   
@@ -652,7 +743,7 @@
             initialize:
             function Enemy(scene, x, y, texture, frame, type, hp, damage, size) {
                 Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
-                this.size = size;
+                this.size = size; //Basic enemies are more or less just units but with a Size which is partly for sorting, mainly for EXP
             }
         });
 
@@ -661,23 +752,23 @@
         
             initialize:
             function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage) {
-                Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
-                this.type = type;
+                Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame); //Player ended up WAY more complex
+                this.type = type; //So a lot of this stuff needed to be in here too
                 this.maxHp = this.hp = hp;
                 this.damage = damage;     
                 this.living = true;         
                 this.menuItem = null;
-                this.setScale(2);
-                this.spellDamage = damage + 5;
-                this.exp = 0;
-                this.level = 1;
-                this.spells = ["Firebolt"];
+                this.setScale(2); //I like em Big
+                this.spellDamage = damage + 5; //May be removed later.
+                this.exp = 0; //Starting EXP
+                this.level = 1; //Starting Level
+                this.spells = ["Firebolt"]; //Starting Spells, only 1 at the moment.
             },
 
-            expGain: function() {
-                this.exp += 1;
-                if (this.exp == 3) {
-                    this.exp = 0;
+            expGain: function(gain) { //This will be called to gain exp and handle level ups. 
+                this.exp += gain; //Increase EXP
+                if (this.exp >= 5) { //Check for level up
+                    this.exp -= 5;
                     this.level += 1;
                     this.spellDamage += 5;
                     this.maxHp += 10;
@@ -686,12 +777,12 @@
                 }
             },
 
-            heal: function() {
+            heal: function() { //Let's the player heal up.
                 this.takeDamage(-50);
                 this.scene.events.emit("Message", this.type + " heals 50 health");
             },
 
-            firebolt: function(target) {
+            firebolt: function(target) { //Basic spell, more or less an Attack at the moment with different damage.
                 if(target.living) {
                     target.takeDamage(this.spellDamage);
                     this.scene.events.emit("Message", this.type + " used Firebolt on " + target.type + " for "+ this.spellDamage + " damage");
@@ -702,18 +793,18 @@
         var MenuItem = new Phaser.Class({
             Extends: Phaser.GameObjects.Text,
             
-            initialize:
+            initialize: //This handles how menu items actually work on the menu.
                     
             function MenuItem(x, y, text, scene) {
-                Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: '#ffffff', align: 'left', fontSize: 25});
+                Phaser.GameObjects.Text.call(this, scene, x, y, text, { color: '#ffffff', align: 'left', fontSize: 25}); //Make it visible
             },
             
             select: function() {
-                this.setColor('#f8ff38');
+                this.setColor('#f8ff38'); //Change color to reflect what is being selected
             },
             
             deselect: function() {
-                this.setColor('#ffffff');
+                this.setColor('#ffffff'); //Change it back
             },
 
             // when the associated enemy or player unit is killed
@@ -727,24 +818,24 @@
         var Menu = new Phaser.Class({
             Extends: Phaser.GameObjects.Container,
             
-            initialize:
+            initialize: //Handles the actual menus
                     
             function Menu(x, y, scene, heroes) {
-                Phaser.GameObjects.Container.call(this, scene, x, y);
+                Phaser.GameObjects.Container.call(this, scene, x, y); //A menu is just a container for menu items basically.
                 this.menuItems = [];
                 this.menuItemIndex = 0;
                 this.x = x;
                 this.y = y;        
                 this.selected = false;
             },     
-            addMenuItem: function(unit) {
+            addMenuItem: function(unit) { //This matters for enemies and, later, spells.
                 var menuItem = new MenuItem(0, this.menuItems.length * 20, unit, this.scene);
                 this.menuItems.push(menuItem);
                 this.add(menuItem); 
                 return menuItem;
             },  
             // menu navigation 
-            moveSelectionUp: function() {
+            moveSelectionUp: function() { //Let's the player change selection, and let's the menu understand what that means.
                 this.menuItems[this.menuItemIndex].deselect();
                 do {
                     this.menuItemIndex--;
@@ -785,7 +876,7 @@
                 this.selected = false;
             },
             confirm: function() {
-                // when the player confirms his slection, do the action
+                // when the player confirms his slection, do the action. This and Back exist for later classes.
             },
             back: function() {
                 //Go back to previous menu, if possible.
@@ -803,7 +894,7 @@
         var ActionsMenu = new Phaser.Class({
             Extends: Menu,
             
-            initialize:
+            initialize: //This menu handles all the player actions.
                     
             function ActionsMenu(x, y, scene) {
                 Menu.call(this, x, y, scene);   
@@ -812,17 +903,17 @@
                 this.addMenuItem('Heal');
             },
             confirm: function() {
-                if(this.menuItemIndex === 0) {
+                if(this.menuItemIndex === 0) { //Jump to which enemy to attack
                     this.scene.events.emit('SelectEnemies', 'attack');
                 }
-                else if (this.menuItemIndex === 1) {
+                else if (this.menuItemIndex === 1) { //Jump to spell selection
                     this.scene.events.emit('SelectSpells');
                 }
-                else if (this.menuItemIndex === 2) {
+                else if (this.menuItemIndex === 2) { //Skip turn and Heal.
                     this.scene.events.emit('Enemy', 'heal', 0);
                 }
             },
-            back: function() {
+            back: function() { //Just to handle hitting the back button, it just goes to the top option.
                 this.menuItems[this.menuItemIndex].deselect();
                 this.menuItemIndex = 0;
                 this.menuItems[this.menuItemIndex].select();
@@ -832,19 +923,19 @@
         var SpellsMenu = new Phaser.Class({
             Extends: Menu,
 
-            initialize:
+            initialize: //Spells, obviously.
 
             function SpellMenu(x, y, scene) {
                 Menu.call(this, x, y, scene);
             },
-            confirm: function() {
+            confirm: function() { //Right now we have 1 spell, this will change later.
                 this.scene.events.emit('SelectEnemies', 'Firebolt');
             },
-            back: function() {
+            back: function() { //Go back to Actions
                 this.menuItems[this.menuItemIndex].deselect();
                 this.scene.events.emit('ActionSelect');
             },
-            remap: function(spells) {
+            remap: function(spells) { //This will let us change what spells are available by leveling up.
                 this.clear();        
                 for(var i = 0; i < spells.length; i++) {
                     var spell = spells[i];
@@ -861,15 +952,15 @@
 
             function EnemiesMenu(x, y, scene) {
                 Menu.call(this, x, y, scene); 
-                this.action = 'attack';       
+                this.action = 'attack';       //Sets default choice
             },       
             setAction: function(action) {
-                this.action = action;
+                this.action = action; //Allows changing the action
             },
             confirm: function() {        
-                this.scene.events.emit("Enemy", this.action, this.menuItemIndex);
+                this.scene.events.emit("Enemy", this.action, this.menuItemIndex); //DO IT TO EM!
             },
-            back: function() {
+            back: function() { //Go back based on chosen action
                 this.menuItems[this.menuItemIndex].deselect();
                 if (this.action == 'attack') {
                     this.scene.events.emit('ActionSelect');
@@ -878,7 +969,7 @@
                     this.scene.events.emit('SelectSpells');
                 }
             },
-            remap: function(units) {
+            remap: function(units) { //Fill the menu with enemies or clear them out if needed.
                 this.clear();        
                 for(var i = 0; i < units.length; i++) {
                     var unit = units[i];
@@ -890,31 +981,31 @@
 
         var Message = new Phaser.Class({
             
-            Extends: Phaser.GameObjects.Container,
+            Extends: Phaser.GameObjects.Container, //This handles the popup messages the player sees in game.
 
             initialize:
             function Message(scene, events) {
-                Phaser.GameObjects.Container.call(this, scene, 300, 90);
-                var graphics = this.scene.add.graphics();
+                Phaser.GameObjects.Container.call(this, scene, 300, 90); //Big container
+                var graphics = this.scene.add.graphics(); //With Graphics
                 this.add(graphics);
-                graphics.lineStyle(1, 0xffffff, 0.8);
+                graphics.lineStyle(1, 0xffffff, 0.8); //So pretty
                 graphics.fillStyle(0x031f4c, 0.3);        
                 graphics.strokeRect(-150, -30, 300, 90);
                 graphics.fillRect(-150, -30, 300, 90);
                 this.text = new Phaser.GameObjects.Text(scene, 0, 0, "", { color: '#ffffff', align: 'center', fontSize: 20, wordWrap: { width: 300, useAdvancedWrap: true }});
-                this.add(this.text);
-                this.text.setOrigin(0.5);        
-                events.on("Message", this.showMessage, this);
-                this.visible = false;
+                this.add(this.text); //Give it some words
+                this.text.setOrigin(0.5);        //Center the text
+                events.on("Message", this.showMessage, this); //Message event
+                this.visible = false; //We don't need to see it if there is no message.
             },
-            showMessage: function(text) {
-                this.text.setText(text);
-                this.visible = true;
-                if(this.hideEvent)
+            showMessage: function(text) { //Now display a message
+                this.text.setText(text); //Set the text
+                this.visible = true; //Show it.
+                if(this.hideEvent) //Makes sure we can actually see it more then once.
                     this.hideEvent.remove(false);
-                this.hideEvent = this.scene.time.addEvent({ delay: 2000, callback: this.hideMessage, callbackScope: this });
+                this.hideEvent = this.scene.time.addEvent({ delay: 2000, callback: this.hideMessage, callbackScope: this }); //Time until go away.
             },
-            hideMessage: function() {
+            hideMessage: function() { //Go away!
                 this.hideEvent = null;
                 this.visible = false;
             }
