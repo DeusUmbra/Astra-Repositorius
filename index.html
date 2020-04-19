@@ -268,7 +268,7 @@
             create: function ()
             {
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)'); //Background that looks kinda like grass
-                bossBack = this.add.image(0, 0, 'start').setOrigin(0,0);
+                bossBack = this.add.image(0, -350, 'start').setOrigin(0,0);
                 bossBack.visible = false;
                 this.cameras.main.fadeIn(300);
                 this.soundFX = this.sound.add("Battle", {loop: "true"}); //Music
@@ -276,9 +276,9 @@
                 this.soundFX.play();
                 this.bossFX = this.sound.add("Boss", {loop: "true"}); //Boss Music
                 this.bossFX.setVolume(0.5);
-                player = new PlayerCharacter(this, 100, 200, 'player', 105, 'Apprentice', 100, 5); //Get us a player character!
+                player = new PlayerCharacter(this, 100, 250, 'player', 105, 'Apprentice', 100, 5); //Get us a player character!
                 this.add.existing(player);
-                hpText = this.add.text(50, 250, 'HP: 100', { fontSize: '30px', fill: '#000' }); //Show some text for current HP
+                hpText = this.add.text(50, 300, 'HP: 100', { fontSize: '30px', fill: '#000' }); //Show some text for current HP
                 this.worldScene = this.scene.get('WorldScene'); //Needed to check for boss fight.
                 if (this.worldScene.checkBoss()) {
                     this.soundFX.stop();
@@ -772,7 +772,7 @@
 
             startBoss: function() {
                 bossBack.visible = true;
-                var eAurum = new Boss(this, 400, 200, 'aurum', 0, 'Aurum', 5, 5, 5);
+                var eAurum = new Boss(this, 450, 150, 'aurum', 0, 'Aurum', 5, 5, 5);
                 this.add.existing(eAurum);
                 this.enemies = [eAurum];
                 exp = 5;
