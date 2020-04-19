@@ -176,6 +176,7 @@
                 this.boss = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
                 this.boss.create(0, 165, 32, 64);
                 this.physics.add.overlap(this.player, this.boss, this.onBoss, false, this); //If player reaches the boss.
+                this.isBoss = false;
                 this.sys.events.on('wake', this.wake, this);
             },
             update: function move (time, delta) //Allow movement
@@ -226,7 +227,13 @@
             },
 
             onBoss: function(player, zone) {
-                //This does nothing at the moment, will impliment later.
+                //Destroy enemy
+                zone.destroy();
+                // shake the world and fade out
+                this.cameras.main.shake(500);
+                this.cameras.main.fadeOut(500);
+                var timeEvent = this.time.addEvent({delay: 500, callback: this.battleStart, callbackScope: this}); //Start battle
+                this.isBoss = true;
             },
 
             wake: function() {
@@ -241,6 +248,10 @@
             battleStart: function() {
                 this.soundFX.stop();
                 this.scene.switch('BattleScene');
+            },
+
+            checkBoss: function () { //This will be used by the battle scene to determine if it is the boss battle or not
+                return this.isBoss;
             }
         });
 
@@ -257,14 +268,26 @@
             create: function ()
             {
                 this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)'); //Background that looks kinda like grass
+                bossBack = this.add.image(0, 0, 'start').setOrigin(0,0);
+                bossBack.visible = false;
                 this.cameras.main.fadeIn(300);
                 this.soundFX = this.sound.add("Battle", {loop: "true"}); //Music
                 this.soundFX.setVolume(0.5);
                 this.soundFX.play();
+                this.bossFX = this.sound.add("Boss", {loop: "true"}); //Boss Music
+                this.bossFX.setVolume(0.5);
                 player = new PlayerCharacter(this, 100, 200, 'player', 105, 'Apprentice', 100, 5); //Get us a player character!
                 this.add.existing(player);
                 hpText = this.add.text(50, 250, 'HP: 100', { fontSize: '30px', fill: '#000' }); //Show some text for current HP
-                this.startBattle();
+                this.worldScene = this.scene.get('WorldScene'); //Needed to check for boss fight.
+                if (this.worldScene.checkBoss()) {
+                    this.soundFX.stop();
+                    this.bossFX.play();
+                    this.startBoss();
+                }
+                else {
+                    this.startBattle();
+                }
                 // on wake event we call startBattle too
                 this.sys.events.on('wake', this.wake, this);
             },
@@ -278,13 +301,17 @@
             wake: function() {
                 this.cameras.main.fadeIn(300);
                 this.soundFX.play();
-                this.startBattle();          
+                if (this.worldScene.checkBoss()) {
+                    this.soundFX.stop();
+                    this.bossFX.play();
+                    this.startBoss();
+                }
+                else {
+                    this.startBattle();
+                }          
             },
 
             startBattle: function() {
-                //var eAurum = new Enemy(this, 400, 200, 'aurum', 0, 'Aurum', 500, 50, 4);
-                //this.add.existing(eAurum);
-
                 var rng = Phaser.Math.Between(1, 8); //Get number for random enemy grouping
                 if (rng == 1) { //One Small
                     rng = Phaser.Math.Between(1,5); //Get a number for random enemy
@@ -387,7 +414,7 @@
                     }
                     else if (rng2 == rng3 && rng2 != rng1) {
                         nameB = " A";
-                        nameC = " C";
+                        nameC = " B";
                     }
                     else if (rng1 == rng3 && rng1 != rng2) {
                         nameA = " A";
@@ -743,10 +770,25 @@
                 this.scene.run("UIScene");        
             },
 
+            startBoss: function() {
+                bossBack.visible = true;
+                var eAurum = new Boss(this, 400, 200, 'aurum', 0, 'Aurum', 5, 5, 5);
+                this.add.existing(eAurum);
+                this.enemies = [eAurum];
+                exp = 5;
+
+                this.hero = [player];
+                this.units = this.hero.concat(this.enemies); //Puts everything into one list
+                
+                this.index = -1; // currently active unit
+                
+                this.scene.run("UIScene"); 
+            },
+
             nextTurn: function() {  
                 // if we have victory or game over
                 var battleState = this.checkEndBattle();
-                if(battleState === "Victory") {  
+                if(battleState === "Victory") {  //You Win!
                     var level = player.expGain(exp); //Gain Exp
                     if (level === "LevelUp") {
                         hpText.setText("HP: " + player.hp); //Leveling Up refills HP so this will reflect that if it comes up.
@@ -756,6 +798,15 @@
                         this.cameras.main.fadeOut(500);         
                         var timeEvent = this.time.addEvent({delay: 500, callback: this.exitBattle, callbackScope: this});
                     }
+                    return;
+                }
+                if(battleState === "BossVictory") { //You beat the game!
+                    this.scene.stop('UIScene');
+                    hpText.setText("");
+                    this.cameras.main.fadeOut(1000);
+                    this.cameras.main.shake(1000);
+                    var timeEvent = this.time.addEvent({delay: 1000, callback: this.winGame, callbackScope: this});
+                    
                     return;
                 }
                 if(battleState === "GameOver") { //YOU LOSE!
@@ -776,6 +827,15 @@
                     // we need the player to select action
                     this.events.emit("ActionSelect", this.index);
                 } 
+                else if (this.units[this.index] instanceof Boss) {
+                    //For right now, just act like an enemy
+                    this.units[this.index].attack(this.hero[0]); 
+                    hpText.setText("HP: " + player.hp); //Show the new HP total
+                    this.cameras.main.shake(100); //Visual effect for the player to understand they got hurt.
+                    this.sound.play("Attack");
+                    // add timer for the next turn, so will have smooth gameplay
+                    this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
+                }
                 else { // else if its enemy unit
                     // call the enemy's attack function 
                     this.units[this.index].attack(this.hero[0]); 
@@ -792,7 +852,8 @@
                 var timeEvent = this.time.addEvent({delay: 500, callback: this.exitBattle, callbackScope: this});
             },
 
-            checkEndBattle: function() {        
+            checkEndBattle: function() {       
+                var bossFight = this.worldScene.checkBoss(); 
                 var victory = true;
                 // if all enemies are dead we have victory
                 for(var i = 0; i < this.enemies.length; i++) {
@@ -804,7 +865,8 @@
                 if(this.hero[0].living)
                     gameOver = false;
                 
-                if(victory) {return "Victory";}
+                if(victory && bossFight) {return "BossVictory";}
+                else if (victory) {return "Victory";}
                 else if(gameOver) {return "GameOver";}
             },
 
@@ -863,6 +925,12 @@
             gameOverMan: function() { //Launch the game over screen
                 this.scene.start('EndScene');
                 this.soundFX.stop();
+                this.bossFX.stop();
+            },
+
+            winGame: function() { //Launch the win screen
+                this.scene.start('WinScene');
+                this.bossFX.stop();
             }
         });
 
@@ -991,6 +1059,23 @@
             }
         });
 
+        var WinScene = new Phaser.Class({
+            Extends: Phaser.Scene,
+            initialize:
+
+            function WinScene() {
+                Phaser.Scene.call(this, {key: 'WinScene'});
+            },
+            create: function() {
+                this.cameras.main.fadeIn(1000);
+                this.soundFX = this.sound.add("Start", {loop: "true"});
+                this.soundFX.play();
+                this.cameras.main.setBackgroundColor('rgba(0, 200, 0, 0.5)');
+                this.add.image(0, 0, 'start').setOrigin(0,0);
+                this.add.text(150, 200, "YOU WIN!!!", {fontSize: '60px', fill: "#0b1f01"});
+            }
+        });
+
         var config = { //OOOOH BOY complicated phaser stuff like setting screen size and zoom.
         type: Phaser.AUTO,
         parent: 'content',
@@ -1001,7 +1086,8 @@
         physics: {
             default: 'arcade',
             arcade: {
-                gravity: { y: 0 }
+                gravity: { y: 0 },
+                debug: true
             }
         },
         scene: [
@@ -1009,7 +1095,8 @@
             WorldScene,
             BattleScene,
             UIScene,
-            EndScene
+            EndScene,
+            WinScene
         ]
         };
         var game = new Phaser.Game(config);
@@ -1060,6 +1147,15 @@
             function Enemy(scene, x, y, texture, frame, type, hp, damage, size) {
                 Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
                 this.size = size; //Basic enemies are more or less just units but with a Size which is partly for sorting, mainly for EXP
+            }
+        });
+
+        var Boss = new Phaser.Class({
+            Extends: Enemy,
+
+            initialize:
+            function Boss(scene, x, y, texture, frame, type, hp, damage, size) {
+                Enemy.call(this, scene, x, y, texture, frame, type, hp, damage, size);
             }
         });
 
