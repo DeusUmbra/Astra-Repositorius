@@ -316,27 +316,27 @@
                 if (rng == 1) { //One Small
                     rng = Phaser.Math.Between(1,5); //Get a number for random enemy
                     if (rng == 1) {
-                        var eRat = new Enemy(this, 500, 200, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                        var eRat = new Enemy(this, 500, 200, 'rat', 0, 'Dire Rat', 5, 15, 1);
                         this.add.existing(eRat);
                         this.enemies = [eRat];
                     }
                     else if (rng == 2) {
-                        var eScor = new Enemy(this, 500, 200, 'scorpion', 0, 'Scorpion', 5, 5, 1);
+                        var eScor = new Enemy(this, 500, 200, 'scorpion', 0, 'Scorpion', 15, 15, 1);
                         this.add.existing(eScor);
                         this.enemies = [eScor];
                     }
                     else if (rng == 3) {
-                        var eSlime = new Enemy(this, 500, 200, 'slime', 0, 'Slime', 5, 5, 1);
+                        var eSlime = new Enemy(this, 500, 200, 'slime', 0, 'Slime', 20, 5, 1);
                         this.add.existing(eSlime);
                         this.enemies = [eSlime];
                     }
                     else if (rng == 4) {
-                        var eDune = new Enemy(this, 500, 200, 'dune', 0, 'Dune Bug', 5, 5, 1);
+                        var eDune = new Enemy(this, 500, 200, 'dune', 0, 'Dune Bug', 15, 10, 1);
                         this.add.existing(eDune);
                         this.enemies = [eDune];
                     }
                     else if (rng == 5) {
-                        var eSpider = new Enemy(this, 500, 200, 'spider', 0, 'Dire Spider', 5, 5, 1);
+                        var eSpider = new Enemy(this, 500, 200, 'spider', 0, 'Dire Spider', 10, 10, 1);
                         this.add.existing(eSpider);
                         this.enemies = [eSpider];
                     }
@@ -351,52 +351,52 @@
                         nameB = " B";
                     }
                     if (rng1 == 1) {
-                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 5, 1);
+                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 15, 1);
                         this.add.existing(eRat);
                         this.enemies = [eRat];
                     }
                     else if (rng1 == 2) {
-                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 5, 5, 1);
+                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 15, 15, 1);
                         this.add.existing(eScor);
                         this.enemies = [eScor];
                     }
                     else if (rng1 == 3) {
-                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 5, 5, 1);
+                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 20, 5, 1);
                         this.add.existing(eSlime);
                         this.enemies = [eSlime];
                     }
                     else if (rng1 == 4) {
-                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 5, 5, 1);
+                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 15, 10, 1);
                         this.add.existing(eDune);
                         this.enemies = [eDune];
                     }
                     else if (rng1 == 5) {
-                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 5, 5, 1);
+                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 10, 10, 1);
                         this.add.existing(eSpider);
                         this.enemies = [eSpider];
                     }
                     if (rng2 == 1) {
-                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 5, 1);
+                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 15, 1);
                         this.add.existing(eRat2);
                         this.enemies.push(eRat2);
                     }
                     else if (rng2 == 2) {
-                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 5, 5, 1);
+                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 15, 15, 1);
                         this.add.existing(eScor2);
                         this.enemies.push(eScor2);
                     }
                     else if (rng2 == 3) {
-                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 5, 5, 1);
+                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 20, 5, 1);
                         this.add.existing(eSlime2);
                         this.enemies.push(eSlime2);
                     }
                     else if (rng2 == 4) {
-                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 5, 5, 1);
+                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 15, 10, 1);
                         this.add.existing(eDune2);
                         this.enemies.push(eDune2);
                     }
                     else if (rng2 == 5) {
-                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 5, 5, 1);
+                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 10, 10, 1);
                         this.add.existing(eSpider2);
                         this.enemies.push(eSpider2);
                     }
@@ -426,77 +426,77 @@
                         nameC = " C";
                     }
                     if (rng1 == 1) {
-                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 5, 1);
+                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 15, 1);
                         this.add.existing(eRat);
                         this.enemies = [eRat];
                     }
                     else if (rng1 == 2) {
-                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 5, 5, 1);
+                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 15, 15, 1);
                         this.add.existing(eScor);
                         this.enemies = [eScor];
                     }
                     else if (rng1 == 3) {
-                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 5, 5, 1);
+                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 20, 5, 1);
                         this.add.existing(eSlime);
                         this.enemies = [eSlime];
                     }
                     else if (rng1 == 4) {
-                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 5, 5, 1);
+                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 15, 10, 1);
                         this.add.existing(eDune);
                         this.enemies = [eDune];
                     }
                     else if (rng1 == 5) {
-                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 5, 5, 1);
+                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 10, 10, 1);
                         this.add.existing(eSpider);
                         this.enemies = [eSpider];
                     }
                     if (rng2 == 1) {
-                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 5, 1);
+                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 15, 1);
                         this.add.existing(eRat2);
                         this.enemies.push(eRat2);
                     }
                     else if (rng2 == 2) {
-                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 5, 5, 1);
+                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 15, 15, 1);
                         this.add.existing(eScor2);
                         this.enemies.push(eScor2);
                     }
                     else if (rng2 == 3) {
-                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 5, 5, 1);
+                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 20, 5, 1);
                         this.add.existing(eSlime2);
                         this.enemies.push(eSlime2);
                     }
                     else if (rng2 == 4) {
-                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 5, 5, 1);
+                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 15, 10, 1);
                         this.add.existing(eDune2);
                         this.enemies.push(eDune2);
                     }
                     else if (rng2 == 5) {
-                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 5, 5, 1);
+                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 10, 10, 1);
                         this.add.existing(eSpider2);
                         this.enemies.push(eSpider2);
                     }
                     if (rng3 == 1) {
-                        var eRat3 = new Enemy(this, 500, 200, 'rat', 0, 'Dire Rat' + nameC, 5, 5, 1);
+                        var eRat3 = new Enemy(this, 500, 200, 'rat', 0, 'Dire Rat' + nameC, 5, 15, 1);
                         this.add.existing(eRat3);
                         this.enemies.push(eRat3);
                     }
                     else if (rng3 == 2) {
-                        var eScor3 = new Enemy(this, 500, 200, 'scorpion', 0, 'Scorpion' + nameC, 5, 5, 1);
+                        var eScor3 = new Enemy(this, 500, 200, 'scorpion', 0, 'Scorpion' + nameC, 15, 15, 1);
                         this.add.existing(eScor3);
                         this.enemies.push(eScor3);
                     }
                     else if (rng3 == 3) {
-                        var eSlime3 = new Enemy(this, 500, 200, 'slime', 0, 'Slime' + nameC, 5, 5, 1);
+                        var eSlime3 = new Enemy(this, 500, 200, 'slime', 0, 'Slime' + nameC, 20, 5, 1);
                         this.add.existing(eSlime3);
                         this.enemies.push(eSlime3);
                     }
                     else if (rng3 == 4) {
-                        var eDune3 = new Enemy(this, 500, 200, 'dune', 0, 'Dune Bug' + nameC, 5, 5, 1);
+                        var eDune3 = new Enemy(this, 500, 200, 'dune', 0, 'Dune Bug' + nameC, 15, 10, 1);
                         this.add.existing(eDune3);
                         this.enemies.push(eDune3);
                     }
                     else if (rng3 == 5) {
-                        var eSpider3 = new Enemy(this, 500, 200, 'spider', 0, 'Dire Spider' + nameC, 5, 5, 1);
+                        var eSpider3 = new Enemy(this, 500, 200, 'spider', 0, 'Dire Spider' + nameC, 10, 10, 1);
                         this.add.existing(eSpider3);
                         this.enemies.push(eSpider3);
                     }
@@ -504,27 +504,27 @@
                 else if (rng == 4) { //One Medium
                     rng = Phaser.Math.Between(1,5);
                     if (rng == 1) {
-                        var eBat = new Enemy(this, 500, 200, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                        var eBat = new Enemy(this, 500, 200, 'bat', 0, 'Dire Bat', 15, 15, 2);
                         this.add.existing(eBat);
                         this.enemies = [eBat];
                     }
                     else if (rng == 2) {
-                        var eSkel = new Enemy(this, 500, 200, 'skeleton', 0, 'Skeleton', 5, 5, 2);
+                        var eSkel = new Enemy(this, 500, 200, 'skeleton', 0, 'Skeleton', 20, 20, 2);
                         this.add.existing(eSkel);
                         this.enemies = [eSkel];
                     }
                     else if (rng == 3) {
-                        var eSnake = new Enemy(this, 500, 200, 'snake', 0, 'Dire Snake', 5, 5, 2);
+                        var eSnake = new Enemy(this, 500, 200, 'snake', 0, 'Dire Snake', 15, 20, 2);
                         this.add.existing(eSnake);
                         this.enemies = [eSnake];
                     }
                     else if (rng == 4) {
-                        var eDemon = new Enemy(this, 500, 200, 'demon', 0, 'Demon', 5, 5, 2);
+                        var eDemon = new Enemy(this, 500, 200, 'demon', 0, 'Demon', 30, 20, 2);
                         this.add.existing(eDemon);
                         this.enemies = [eDemon];
                     }
                     else if (rng == 5) {
-                        var eTree = new Enemy(this, 500, 200, 'tree', 0, 'Cursed Tree', 5, 5, 2);
+                        var eTree = new Enemy(this, 500, 200, 'tree', 0, 'Cursed Tree', 40, 10, 2);
                         this.add.existing(eTree);
                         this.enemies = [eTree];
                     }
@@ -539,52 +539,52 @@
                         nameB = " B";
                     }
                     if (rng1 == 1) {
-                        var eBat = new Enemy(this, 400, 100, 'bat', 0, 'Dire Bat' + nameA, 5, 5, 2);
+                        var eBat = new Enemy(this, 400, 100, 'bat', 0, 'Dire Bat' + nameA, 15, 15, 2);
                         this.add.existing(eBat);
                         this.enemies = [eBat];
                     }
                     else if (rng1 == 2) {
-                        var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton' + nameA, 5, 5, 2);
+                        var eSkel = new Enemy(this, 400, 100, 'skeleton', 0, 'Skeleton' + nameA, 20, 20, 2);
                         this.add.existing(eSkel);
                         this.enemies = [eSkel];
                     }
                     else if (rng1 == 3) {
-                        var eSnake = new Enemy(this, 400, 100, 'snake', 0, 'Dire Snake' + nameA, 5, 5, 2);
+                        var eSnake = new Enemy(this, 400, 100, 'snake', 0, 'Dire Snake' + nameA, 15, 20, 2);
                         this.add.existing(eSnake);
                         this.enemies = [eSnake];
                     }
                     else if (rng1 == 4) {
-                        var eDemon = new Enemy(this, 400, 100, 'demon', 0, 'Demon' + nameA, 5, 5, 2);
+                        var eDemon = new Enemy(this, 400, 100, 'demon', 0, 'Demon' + nameA, 30, 20, 2);
                         this.add.existing(eDemon);
                         this.enemies = [eDemon];
                     }
                     else if (rng1 == 5) {
-                        var eTree = new Enemy(this, 400, 100, 'tree', 0, 'Cursed Tree' + nameA, 5, 5, 2);
+                        var eTree = new Enemy(this, 400, 100, 'tree', 0, 'Cursed Tree' + nameA, 40, 10, 2);
                         this.add.existing(eTree);
                         this.enemies = [eTree];
                     }
                     if (rng2 == 1) {
-                        var eBat2 = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat' + nameB, 5, 5, 2);
+                        var eBat2 = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat' + nameB, 15, 15, 2);
                         this.add.existing(eBat2);
                         this.enemies.push(eBat2);
                     }
                     else if (rng2 == 2) {
-                        var eSkel2 = new Enemy(this, 400, 300, 'skeleton', 0, 'Skeleton' + nameB, 5, 5, 2);
+                        var eSkel2 = new Enemy(this, 400, 300, 'skeleton', 0, 'Skeleton' + nameB, 20, 20, 2);
                         this.add.existing(eSkel2);
                         this.enemies.push(eSkel2);
                     }
                     else if (rng2 == 3) {
-                        var eSnake2 = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake' + nameB, 5, 5, 2);
+                        var eSnake2 = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake' + nameB, 15, 20, 2);
                         this.add.existing(eSnake2);
                         this.enemies.push(eSnake2);
                     }
                     else if (rng2 == 4) {
-                        var eDemon2 = new Enemy(this, 400, 300, 'demon', 0, 'Demon' + nameB, 5, 5, 2);
+                        var eDemon2 = new Enemy(this, 400, 300, 'demon', 0, 'Demon' + nameB, 30, 20, 2);
                         this.add.existing(eDemon2);
                         this.enemies.push(eDemon2);
                     }
                     else if (rng2 == 5) {
-                        var eTree2 = new Enemy(this, 400, 300, 'tree', 0, 'Cursed Tree' + nameB, 5, 5, 2);
+                        var eTree2 = new Enemy(this, 400, 300, 'tree', 0, 'Cursed Tree' + nameB, 40, 10, 2);
                         this.add.existing(eTree2);
                         this.enemies.push(eTree2);
                     }
@@ -618,27 +618,27 @@
                     }
                     rng = Phaser.Math.Between(1,5); //Get a random number for enemy 2
                     if (rng == 1) {
-                        var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                        var eBat = new Enemy(this, 400, 300, 'bat', 0, 'Dire Bat', 15, 15, 2);
                         this.add.existing(eBat);
                         this.enemies.push(eBat);
                     }
                     else if (rng == 2) {
-                        var eSkel = new Enemy(this, 400, 300, 'skeleton', 0, 'Skeleton', 5, 5, 2);
+                        var eSkel = new Enemy(this, 400, 300, 'skeleton', 0, 'Skeleton', 20, 20, 2);
                         this.add.existing(eSkel);
                         this.enemies.push(eSkel);
                     }
                     else if (rng == 3) {
-                        var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 5, 5, 2);
+                        var eSnake = new Enemy(this, 400, 300, 'snake', 0, 'Dire Snake', 15, 20, 2);
                         this.add.existing(eSnake);
                         this.enemies.push(eSnake);
                     }
                     else if (rng == 4) {
-                        var eDemon = new Enemy(this, 400, 300, 'demon', 0, 'Demon', 5, 5, 2);
+                        var eDemon = new Enemy(this, 400, 300, 'demon', 0, 'Demon', 30, 20, 2);
                         this.add.existing(eDemon);
                         this.enemies.push(eDemon);
                     }
                     else if (rng == 5) {
-                        var eTree = new Enemy(this, 400, 300, 'tree', 0, 'Cursed Tree', 5, 5, 2);
+                        var eTree = new Enemy(this, 400, 300, 'tree', 0, 'Cursed Tree', 40, 10, 2);
                         this.add.existing(eTree);
                         this.enemies.push(eTree);
                     }
@@ -654,77 +654,77 @@
                         nameB = " B";
                     }
                     if (rng1 == 1) {
-                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 5, 1);
+                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat' + nameA, 5, 15, 1);
                         this.add.existing(eRat);
                         this.enemies = [eRat];
                     }
                     else if (rng1 == 2) {
-                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 5, 5, 1);
+                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion' + nameA, 15, 15, 1);
                         this.add.existing(eScor);
                         this.enemies = [eScor];
                     }
                     else if (rng1 == 3) {
-                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 5, 5, 1);
+                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime' + nameA, 20, 5, 1);
                         this.add.existing(eSlime);
                         this.enemies = [eSlime];
                     }
                     else if (rng1 == 4) {
-                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 5, 5, 1);
+                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug' + nameA, 15, 10, 1);
                         this.add.existing(eDune);
                         this.enemies = [eDune];
                     }
                     else if (rng1 == 5) {
-                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 5, 5, 1);
+                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider' + nameA, 10, 10, 1);
                         this.add.existing(eSpider);
                         this.enemies = [eSpider];
                     }
                     if (rng2 == 1) {
-                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 5, 1);
+                        var eRat2 = new Enemy(this, 400, 300, 'rat', 0, 'Dire Rat' + nameB, 5, 15, 1);
                         this.add.existing(eRat2);
                         this.enemies.push(eRat2);
                     }
                     else if (rng2 == 2) {
-                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 5, 5, 1);
+                        var eScor2 = new Enemy(this, 400, 300, 'scorpion', 0, 'Scorpion' + nameB, 15, 15, 1);
                         this.add.existing(eScor2);
                         this.enemies.push(eScor2);
                     }
                     else if (rng2 == 3) {
-                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 5, 5, 1);
+                        var eSlime2 = new Enemy(this, 400, 300, 'slime', 0, 'Slime' + nameB, 20, 5, 1);
                         this.add.existing(eSlime2);
                         this.enemies.push(eSlime2);
                     }
                     else if (rng2 == 4) {
-                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 5, 5, 1);
+                        var eDune2 = new Enemy(this, 400, 300, 'dune', 0, 'Dune Bug' + nameB, 15, 10, 1);
                         this.add.existing(eDune2);
                         this.enemies.push(eDune2);
                     }
                     else if (rng2 == 5) {
-                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 5, 5, 1);
+                        var eSpider2 = new Enemy(this, 400, 300, 'spider', 0, 'Dire Spider' + nameB, 10, 10, 1);
                         this.add.existing(eSpider2);
                         this.enemies.push(eSpider2);
                     }
                     if (rng3 == 1) {
-                        var eBat = new Enemy(this, 500, 200, 'bat', 0, 'Dire Bat', 5, 5, 2);
+                        var eBat = new Enemy(this, 500, 200, 'bat', 0, 'Dire Bat', 15, 15, 2);
                         this.add.existing(eBat);
                         this.enemies.push(eBat);
                     }
                     else if (rng3 == 2) {
-                        var eSkel = new Enemy(this, 500, 200, 'skeleton', 0, 'Skeleton', 5, 5, 2);
+                        var eSkel = new Enemy(this, 500, 200, 'skeleton', 0, 'Skeleton', 20, 20, 2);
                         this.add.existing(eSkel);
                         this.enemies.push(eSkel);
                     }
                     else if (rng3 == 3) {
-                        var eSnake = new Enemy(this, 500, 200, 'snake', 0, 'Dire Snake', 5, 5, 2);
+                        var eSnake = new Enemy(this, 500, 200, 'snake', 0, 'Dire Snake', 15, 20, 2);
                         this.add.existing(eSnake);
                         this.enemies.push(eSnake);
                     }
                     else if (rng3 == 4) {
-                        var eDemon = new Enemy(this, 500, 200, 'demon', 0, 'Demon', 5, 5, 2);
+                        var eDemon = new Enemy(this, 500, 200, 'demon', 0, 'Demon', 30, 20, 2);
                         this.add.existing(eDemon);
                         this.enemies.push(eDemon);
                     }
                     else if (rng3 == 5) {
-                        var eTree = new Enemy(this, 500, 200, 'tree', 0, 'Cursed Tree', 5, 5, 2);
+                        var eTree = new Enemy(this, 500, 200, 'tree', 0, 'Cursed Tree', 40, 10, 2);
                         this.add.existing(eTree);
                         this.enemies.push(eTree);
                     }
@@ -732,27 +732,27 @@
                 else if (rng == 8){ //One Large Enemy
                     rng = Phaser.Math.Between(1,5);
                     if (rng == 1) {
-                        var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 5, 5, 5);
+                        var eHorror = new Enemy(this, 500, 200, 'horror', 0, 'Elder Horror', 100, 45, 5);
                         this.add.existing(eHorror);
                         this.enemies = [eHorror];
                     }
                     else if (rng == 2) {
-                        var eDrake = new Enemy(this, 500, 200, 'drake', 0, 'Drake', 5, 5, 5);
+                        var eDrake = new Enemy(this, 500, 200, 'drake', 0, 'Drake', 125, 40, 5);
                         this.add.existing(eDrake);
                         this.enemies = [eDrake];
                     }
                     else if (rng == 3) {
-                        var eDec = new Enemy(this, 500, 200, 'deceleon', 0, 'Deceleon', 5, 5, 5);
+                        var eDec = new Enemy(this, 500, 200, 'deceleon', 0, 'Deceleon', 200, 25, 5);
                         this.add.existing(eDec);
                         this.enemies = [eDec];
                     }
                     else if (rng == 4) {
-                        var eLizard = new Enemy(this, 500, 200, 'lizard', 0, 'Lizard Beast', 5, 5, 5);
+                        var eLizard = new Enemy(this, 500, 200, 'lizard', 0, 'Lizard Beast', 175, 30, 5);
                         this.add.existing(eLizard);
                         this.enemies = [eLizard];
                     }
                     else if (rng == 5) {
-                        var eNaga = new Enemy(this, 500, 200, 'nagaruda', 0, 'Nagaruda', 5, 5, 5);
+                        var eNaga = new Enemy(this, 500, 200, 'nagaruda', 0, 'Nagaruda', 150, 35, 5);
                         this.add.existing(eNaga);
                         this.enemies = [eNaga];
                     }
