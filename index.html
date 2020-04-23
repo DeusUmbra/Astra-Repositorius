@@ -592,27 +592,27 @@
                 else if (rng == 6) { //One Medium, One Small
                     rng = Phaser.Math.Between(1,5); //Get a number for random enemy 1
                     if (rng == 1) {
-                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 5, 1);
+                        var eRat = new Enemy(this, 400, 100, 'rat', 0, 'Dire Rat', 5, 15, 1);
                         this.add.existing(eRat);
                         this.enemies = [eRat];
                     }
                     else if (rng == 2) {
-                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion', 5, 5, 1);
+                        var eScor = new Enemy(this, 400, 100, 'scorpion', 0, 'Scorpion', 15, 15, 1);
                         this.add.existing(eScor);
                         this.enemies = [eScor];
                     }
                     else if (rng == 3) {
-                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime', 5, 5, 1);
+                        var eSlime = new Enemy(this, 400, 100, 'slime', 0, 'Slime', 20, 5, 1);
                         this.add.existing(eSlime);
                         this.enemies = [eSlime];
                     }
                     else if (rng == 4) {
-                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug', 5, 5, 1);
+                        var eDune = new Enemy(this, 400, 100, 'dune', 0, 'Dune Bug', 15, 10, 1);
                         this.add.existing(eDune);
                         this.enemies = [eDune];
                     }
                     else if (rng == 5) {
-                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider', 5, 5, 1);
+                        var eSpider = new Enemy(this, 400, 100, 'spider', 0, 'Dire Spider', 10, 10, 1);
                         this.add.existing(eSpider);
                         this.enemies = [eSpider];
                     }
@@ -772,7 +772,7 @@
 
             startBoss: function() {
                 bossBack.visible = true;
-                var eAurum = new Boss(this, 450, 150, 'aurum', 0, 'Aurum', 5, 5, 5);
+                var eAurum = new Boss(this, 450, 150, 'aurum', 0, 'Aurum', 500, 45, 5);
                 this.add.existing(eAurum);
                 this.enemies = [eAurum];
                 exp = 5;
@@ -1168,6 +1168,7 @@
                 this.type = type; //So a lot of this stuff needed to be in here too
                 this.maxHp = this.hp = hp;
                 this.damage = damage;     
+                this.healPower = 50;
                 this.living = true;         
                 this.menuItem = null;
                 this.setScale(2); //I like em Big
@@ -1191,24 +1192,29 @@
                         if (this.level == 4) {
                             this.spells.push("Fire Bolt");
                             this.type = "Sorcerer";
+                            this.healPower = this.maxHP/2;
                         }
                         else if (this.level == 8) {
                             this.spells.push("Ice Spike");
                             this.type = "Mage";
+                            this.healPower = this.maxHP/2;
                         }
                         else if (this.level == 12) {
                             this.spells.push("Shock Blast");
                             this.type = "Wizard";
+                            this.healPower = this.maxHP/2;
                         }
                         else if (this.level == 16) {
                             this.spells.push("Doom Bolt");
                             this.type = "Archmage";
+                            this.healPower = this.maxHP/2;
                         }
                         else if (this.level == 20) {
                             this.spells.push("Death");
                             this.type = "Grand Arcanist";
                             this.maxHp = 300;
                             this.hp = this.maxHp;
+                            this.healPower = this.maxHP/2;
                         }
                         return "LevelUp";
                     }
@@ -1216,8 +1222,8 @@
             },
 
             heal: function() { //Let's the player heal up.
-                this.takeDamage(-50);
-                this.scene.events.emit("Message", this.type + " heals 50 health");
+                this.takeDamage(-this.healPower);
+                this.scene.events.emit("Message", this.type + " heals for "+ this.healPower +" health.");
             },
 
             magicmissle: function(target) {
