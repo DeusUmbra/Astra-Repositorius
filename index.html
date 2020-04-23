@@ -1192,29 +1192,29 @@
                         if (this.level == 4) {
                             this.spells.push("Fire Bolt");
                             this.type = "Sorcerer";
-                            this.healPower = this.maxHp / 2;
+                            this.healPower = 75;
                         }
                         else if (this.level == 8) {
                             this.spells.push("Ice Spike");
                             this.type = "Mage";
-                            this.healPower = this.maxHp/2;
+                            this.healPower = 100;
                         }
                         else if (this.level == 12) {
                             this.spells.push("Shock Blast");
                             this.type = "Wizard";
-                            this.healPower = this.maxHp/2;
+                            this.healPower = 125;
                         }
                         else if (this.level == 16) {
                             this.spells.push("Doom Bolt");
                             this.type = "Archmage";
-                            this.healPower = this.maxHp/2;
+                            this.healPower = 150;
                         }
                         else if (this.level == 20) {
                             this.spells.push("Death");
                             this.type = "Grand Arcanist";
                             this.maxHp = 300;
                             this.hp = this.maxHp;
-                            this.healPower = this.maxHp/2;
+                            this.healPower = 200;
                         }
                         return "LevelUp";
                     }
