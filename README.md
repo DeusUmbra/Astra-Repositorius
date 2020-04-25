@@ -1,6 +1,6 @@
 # Astra-Repositorius
 Needs to run off a server, like xammp.
-Alternatively, go to https://deusumbra.github.io/Astra-Repositorius/
+Alternatively, go to https://deusumbra.github.io/Web3Final/
 
 World Controls: Arrows to move around.
 
