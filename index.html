@@ -772,7 +772,7 @@
 
             startBoss: function() {
                 bossBack.visible = true;
-                var eAurum = new Boss(this, 450, 150, 'aurum', 0, 'Aurum', 500, 45, 5);
+                var eAurum = new Boss(this, 450, 150, 'aurum', 0, 'Aurum', 500, 40, 5);
                 this.add.existing(eAurum);
                 this.enemies = [eAurum];
                 exp = 5;
@@ -828,12 +828,32 @@
                     this.events.emit("ActionSelect", this.index);
                 } 
                 else if (this.units[this.index] instanceof Boss) {
-                    //For right now, just act like an enemy
-                    this.units[this.index].attack(this.hero[0]); 
-                    hpText.setText("HP: " + player.hp); //Show the new HP total
-                    this.cameras.main.shake(100); //Visual effect for the player to understand they got hurt.
-                    this.sound.play("Attack");
-                    // add timer for the next turn, so will have smooth gameplay
+                    var ran = Phaser.Math.Between(1, 5); //Pick a random action for the boss to take.
+                    if (ran == 1) {
+                        this.units[this.index].attack(this.hero[0]);
+                        this.sound.play("Attack");
+                        this.cameras.main.shake(100);
+                    }
+                    else if (ran == 2) {
+                        this.units[this.index].arcanebolt(this.hero[0]);
+                        this.sound.play("Spell");
+                        this.cameras.main.shake(100);
+                    }
+                    else if (ran == 3) {
+                        this.units[this.index].heal();
+                        this.sound.play("Spell");
+                    }
+                    else if (ran == 4) {
+                        this.units[this.index].lifeleech(this.hero[0]);
+                        this.sound.play("Spell");
+                        this.cameras.main.shake(100);
+                    }
+                    else {
+                        this.units[this.index].doom(this.hero[0]);
+                        this.sound.play("Spell");
+                        this.cameras.main.shake(100);
+                    }
+                    hpText.setText("HP: " + player.hp);
                     this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
                 }
                 else { // else if its enemy unit
@@ -1086,8 +1106,7 @@
         physics: {
             default: 'arcade',
             arcade: {
-                gravity: { y: 0 },
-                debug: true
+                gravity: { y: 0 }
             }
         },
         scene: [
@@ -1156,6 +1175,40 @@
             initialize:
             function Boss(scene, x, y, texture, frame, type, hp, damage, size) {
                 Enemy.call(this, scene, x, y, texture, frame, type, hp, damage, size);
+            },
+
+            arcanebolt: function(target) { //This lets the boss cast a spell similar to how the player does.
+                if(target.living) {
+                    target.takeDamage(50);
+                    this.scene.events.emit("Message", this.type + " cast Arcane Bolt on " + target.type + " for 50 damage.");
+                }
+            },
+
+            heal: function() { //Let's the Boss heal up.
+                this.takeDamage(-50);
+                this.scene.events.emit("Message", this.type + " heals for 50 health.");
+            },
+
+            lifeleech: function(target) {//This attack will drain a small bit of health from the player and give it to the boss.
+                if(target.living) {
+                    target.takeDamage(20);
+                    this.takeDamage(-20);
+                    this.scene.events.emit("Message", this.type + " cast Life Leech on " + target.type + " for 20 damage.");
+                }
+            },
+
+            doom: function(target) {//Super attack spell
+                if(target.living) {
+                    var chance = Phaser.Math.Between(1, 4); //With a chance of failure.
+                    if (chance != 1) { //The odds of failure should be low, but noticeable.
+                        target.takeDamage(100);
+                        this.scene.events.emit("Message", this.type + " cast Doom on " + target.type + " for 100 damage.");
+                    }
+                    else { //If it fails, hurt the boss a little. 
+                        this.takeDamage(10);
+                        this.scene.events.emit("Message", this.type + " cast Doom, but it failed!");
+                    }
+                }
             }
         });
 
